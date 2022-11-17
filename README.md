@@ -127,7 +127,7 @@ These demonstrate the use of XAD to calculate derivatives using AAD.
 Due to the nature of this repository, two different licenses have to be used for 
 different part of the code-base.
 The [tests](test-suite/) and [examples](Examples/) folders are containing code taken
-and modified from QuantLib where the [QuantLib license](test-suite/LICENSE.TXT] applies.
+and modified from QuantLib where the [QuantLib license](test-suite/LICENSE.TXT) applies.
 The [ql](ql/) folder contains adaptor modules for XAD,
 where the [GNU AGPL](ql/LICENSE.md) applies.
 This is clearly indicated by having separate license files in each folder.
