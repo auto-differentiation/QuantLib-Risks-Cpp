@@ -1,0 +1,6 @@
+add_subdirectory(ql)
+if(MSVC)
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+add_subdirectory(Examples)
+add_subdirectory(test-suite)

@@ -1,0 +1,5 @@
+add_executable(AdjointBermudanSwaption AdjointBermudanSwaptionXAD.cpp)
+target_link_libraries(AdjointBermudanSwaption ql_library)
+if(QL_INSTALL_EXAMPLES)
+    install(TARGETS AdjointBermudanSwaption RUNTIME DESTINATION  ${QL_INSTALL_EXAMPLESDIR})
+endif()

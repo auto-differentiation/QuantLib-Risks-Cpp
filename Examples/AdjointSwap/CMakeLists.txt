@@ -1,0 +1,5 @@
+add_executable(AdjointSwap AdjointSwapXAD.cpp)
+target_link_libraries(AdjointSwap ql_library)
+if(QL_INSTALL_EXAMPLES)
+    install(TARGETS AdjointSwap RUNTIME DESTINATION  ${QL_INSTALL_EXAMPLESDIR})
+endif()

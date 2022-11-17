@@ -1,0 +1,182 @@
+# Workflow to run against the corresponding QuantLib release,
+# testing if the build and tests are working fine
+# Note: In addition to pushes/pull requests, this workflow 
+# can also be executed manually, and the repositories / branches 
+# for QuantLib and XAD can be provided in this case.
+name: CI
+on: 
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      ql_repo:
+        description: Quantlib repository in <owner>/<repo> format
+        required: true
+        default: lballabio/QuantLib
+      ql_branch:
+        description: Branch or tag for QuantLib repository
+        required: true
+        default: master
+      xad_repo:
+        description: XAD repository in <owner>/<repo> format
+        required: true
+        default: xcelerit/XAD
+      xad_branch:
+        description: Branch or tag for XAD repository
+        required: true
+        default: main
+  schedule:
+    - cron: '02 5 * * *'  # 5:02 every day
+env:
+  ql_repo: ${{ github.event.inputs.ql_repo || 'lballabio/QuantLib' }}
+  ql_branch: ${{ github.event.inputs.ql_branch || 'master' }}
+  xad_repo: ${{ github.event.inputs.xad_repo || 'xcelerit/XAD' }}
+  xad_branch: ${{ github.event.inputs.xad_branch || 'main' }}
+jobs:
+  xad-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.ql_repo }}
+        ref: ${{ env.ql_branch }}
+        path: QuantLib
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.xad_repo }}
+        ref: ${{ env.xad_branch }}
+        path: XAD
+    - uses: actions/checkout@v3
+      with:
+        path: qlxad
+    - name: Setup
+      run: |
+        sudo apt update
+        sudo apt install -y libboost-dev ccache ninja-build
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2.5
+      with:
+        key: linux
+        max-size: 650M
+    - name: Configure
+      run: |
+        cd QuantLib
+        mkdir build
+        cd build
+        cmake -G Ninja -DBOOST_ROOT=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
+    - name: Compile
+      run: |
+        cd QuantLib/build
+        cmake --build .
+    - name: Test QuantLib
+      run: |
+        cd QuantLib/build
+        ./test-suite/quantlib-test-suite --log_level=message    
+    - name: Test QlXAD
+      run: |
+        cd QuantLib/build
+        ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message
+  xad-win:
+    runs-on: windows-2022
+    env:
+      vsvarsall: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.ql_repo }}
+        ref: ${{ env.ql_branch }}
+        path: QuantLib
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.xad_repo }}
+        ref: ${{ env.xad_branch }}
+        path: XAD
+    - uses: actions/checkout@v3
+      with:
+        path: qlxad
+    - name: sccache
+      uses: hendrikmuhs/ccache-action@v1.2.5
+      with:
+        key: windows
+        variant: sccache
+        max-size: 650M
+    - name: Setup
+      run: |
+        choco install -y ninja
+        $Url = "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/binaries/boost_1_78_0-msvc-14.3-64.exe"
+        (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
+        Start-Process -Wait -FilePath "$env:TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\local\boost-1.78.0"
+    - name: Configure
+      env:
+        BOOST_ROOT: C:\local\boost-1.78.0
+      shell: cmd
+      run: |
+        cd QuantLib
+        mkdir build
+        cd build
+        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        cmake .. -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON
+    - name: Build
+      shell: cmd
+      run: |
+        cd QuantLib\build
+        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        cmake --build .
+    - name: Test QuantLib
+      shell: cmd
+      run: |
+        cd QuantLib\build
+        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        .\test-suite\quantlib-test-suite --log_level=message
+    - name: Test QlXAD
+      shell: cmd
+      run: |
+        cd QuantLib\build
+        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        .\qlxad\test-suite\quantlib-xad-test-suite --log_level=message
+  xad-macos:
+    runs-on: macos-latest
+    env:
+      CXXFLAGS: -stdlib=libc++ -mmacosx-version-min=10.9
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.ql_repo }}
+        ref: ${{ env.ql_branch }}
+        path: QuantLib
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ env.xad_repo }}
+        ref: ${{ env.xad_branch }}
+        path: XAD
+    - uses: actions/checkout@v3
+      with:
+        path: qlxad
+    - name: Setup
+      run: |
+        brew install boost
+        brew install ninja
+        brew install ccache
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2.5
+      with:
+        key: macos
+        max-size: 650M
+    - name: Configure
+      run: |
+        cd QuantLib
+        mkdir build
+        cd build
+        cmake -G Ninja -DBOOST_ROOT=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
+    - name: Compile
+      run: |
+        cd QuantLib/build
+        cmake --build .
+    - name: Test QuantLib
+      run: |
+        cd QuantLib/build
+        ./test-suite/quantlib-test-suite --log_level=message    
+    - name: Test QlXAD
+      run: |
+        cd QuantLib/build
+        ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message
