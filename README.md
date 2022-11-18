@@ -66,7 +66,7 @@ and can alternatively be used directly from the IDE.
 ### 4. QuantLib CMake Configuration
 
 The build is driven from the QuantLib directory - XAD and qlxad are
-inserted using QuantLib's external subdirectories hook. 
+inserted using [QuantLib's extension hook](https://www.quantlib.org/install/cmake.shtml#extensions). 
 
 Configure the QuantLib CMake build with setting the following parameters:
 
