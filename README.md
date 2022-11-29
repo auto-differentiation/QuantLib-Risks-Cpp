@@ -80,8 +80,9 @@ For Linux, the command-line for this is:
 ```shell
 cd QuantLib
 mkdir build
+cd build
 cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release \
-  -DQL_EXTERNAL_SUBDIRECTORIES=`pwd`/../../xad;`pwd`/../../qlxad \
+  -DQL_EXTERNAL_SUBDIRECTORIES="`pwd`/../../xad;`pwd`/../../qlxad" \
   -DQL_EXTRA_LINK_LIBRARIES=qlxad \
   -DQL_NULL_AS_FUNCTIONS=ON \
   -DXAD_STATIC_MSVC_RUNTIME=ON
