@@ -49,7 +49,7 @@
 #include <ql/termstructures/yield/piecewiseyieldcurve.hpp>
 #include <ql/termstructures/volatility/swaption/swaptionvolmatrix.hpp>
 #include <ql/indexes/swap/euriborswap.hpp>
-#include <ql/termstructures/volatility/swaption/sabrswaptionvolatilitycube.hpp
+#include <ql/termstructures/volatility/swaption/sabrswaptionvolatilitycube.hpp>
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/models/shortrate/onefactormodels/gsr.hpp>
 #include <ql/pricingengines/swaption/gaussian1dswaptionengine.hpp>
