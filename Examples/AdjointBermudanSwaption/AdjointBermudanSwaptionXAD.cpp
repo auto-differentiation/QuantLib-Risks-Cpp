@@ -49,7 +49,7 @@
 #include <ql/termstructures/yield/piecewiseyieldcurve.hpp>
 #include <ql/termstructures/volatility/swaption/swaptionvolmatrix.hpp>
 #include <ql/indexes/swap/euriborswap.hpp>
-#include <ql/termstructures/volatility/swaption/swaptionvolcube1.hpp>
+#include <ql/termstructures/volatility/swaption/sabrswaptionvolatilitycube.hpp
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/models/shortrate/onefactormodels/gsr.hpp>
 #include <ql/pricingengines/swaption/gaussian1dswaptionengine.hpp>
@@ -233,7 +233,7 @@ int main() {
 
 		auto indexBase = ext::make_shared<EuriborSwapIsdaFixA>(30 * Years, yts6m_h);
 		auto indexBaseShort = ext::make_shared<EuriborSwapIsdaFixA>(2 * Years, yts6m_h);
-		auto swvol = ext::make_shared<SwaptionVolCube1>(
+		auto swvol = ext::make_shared<SabrSwaptionVolatilityCube>(
 			swatm_h, optionTenors, swapTenors, strikeSpreads, volSpreads,
 			indexBase, indexBaseShort, true, sabrParams, paramFixed, true,
 			boost::shared_ptr<EndCriteria>(), 100.0);
