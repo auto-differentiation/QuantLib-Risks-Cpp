@@ -65,7 +65,6 @@ test_suite* init_unit_test_suite(int, char*[]) {
     char** argv = boost::unit_test::framework::master_test_suite().argv;
     configure(evaluation_date(argc, argv));
 
-    const QuantLib::Settings& settings = QuantLib::Settings::instance();
     auto* test = BOOST_TEST_SUITE("QuantLib XAD test suite");
 
     test->add(AmericanOptionXadTest::suite());
