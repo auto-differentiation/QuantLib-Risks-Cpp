@@ -31,6 +31,7 @@
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
 #include <boost/type_traits/is_pod.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <XAD/XAD.hpp>
 #include <XAD/Complex.hpp>
 #include <XAD/StdCompatibility.hpp>
@@ -61,6 +62,17 @@ namespace QuantLib {
 
 // boost specialisations
 namespace boost {
+
+    template <class Target, class Op, class Expr> 
+    inline Target numeric_cast(const xad::UnaryExpr<double, Op, Expr>& arg) {
+        return numeric_cast<Target>(value(arg));
+    }
+
+    template <class Target, class Op, class Expr1, class Expr2> 
+    inline Target numeric_cast(const xad::BinaryExpr<double, Op, Expr1, Expr2>& arg) {
+        return numeric_cast<Target>(value(arg));
+    }
+
     namespace math {
 
         // full specialisations for promoting 2 types where one of them is AReal<double>,
