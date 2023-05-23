@@ -1,126 +1,48 @@
 # QuantLib - XAD Integration Repository
 
-This repository contains integration headers, examples, and tests required when 
-using the [XAD](https://github.com/xcelerit/xad) algorithmic differentiation
-library with [QuantLib](https://github.com/lballabio/QuantLib).
-It is not usable outside of this context.
+<p align="center" dir="auto">
+    <a href="https://github.com/auto-differentiation/qlxad/actions/workflows/ci.yaml">
+        <img src="https://img.shields.io/github/actions/workflow/status/auto-differentiation/qlxad/ci.yaml?label=Build%20%28XAD%20main%20vs%20QuantLib%20master%29" alt="GitHub Workflow Status" style="max-width: 100%;margin-right:20px">
+    </a>
+    <a href="https://github.com/auto-differentiation/qlxad/blob/main/CONTRIBUTING.md">
+        <img src="https://img.shields.io/badge/PRs%20-welcome-brightgreen.svg" alt="PRs Welcome" style="max-width: 100%;">
+    </a>
+</p>
 
-## Building
+As a demonstrator of integration of the [XAD automatic differentation tool](https://auto-differentiation.github.io) with real-world code, 
+the latest release of QuantLib is AAD-enabled with XAD. 
+The performance achieved on sample applications is many-fold superior to what has been reported previously with other tools. 
+This demonstrates production quality use of the XAD library in a code-base of several hundred thousand lines.
 
-### 1. Repository Clone/Checkout
+This repository contains integration headers, examples, and tests required
+for this integration.
+It is not usable stand-alone.
 
-Clone these three repositories into separate folders:
+## Getting Started
 
-- https://github.com/xcelerit/qlxad.git
-- https://github.com/xcelerit/xad.git
-- https://github.com/lballabio/QuantLib.git
+For detailed build instructions with [XAD](https://auto-differentiation.github.io) and [QuantLib](https://www.quantlib.org), please refer to the [XAD documentation site](https://auto-differentiation.github.io/quantlib/).
 
-This repository follows QuantLib's release cycle, using the same version numbers
-as the corresponding QuantLib version.
-That is:
+## Getting Help
 
-- For tagged releases, checkout the same release tag for QuantLib and this repository
-- For QuantLib master, check out this repository's main branch
+If you have found an issue, want to report a bug, or have a feature request, please raise a [GitHub issue](https://github.com/auto-differentiation/qlxad/issues).
 
-For short, these are the commands to checkout release 1.28:
+For general questions about XAD, sharing ideas, engaging with community members, etc, please use [GitHub Discussions](https://github.com/auto-differentiation/qlxad/discussion).
 
-```shell
-git clone https://github.com/xcelerit/xad.git
-git clone --branch v1.28 https://github.com/xcelerit/qlxad.git
-git clone --branch QuantLib-v1.28 https://github.com/lballabio/QuantLib.git
-```
 
-(Or, to work on the latest master/main branch, omit the `--branch xxx` option.)
+## Contributing
 
-### 2. Install Boost
-
-A recent version of boost is a requirement for building QuantLib.
-If you do not have it already, you need to install it into a system path.
-You can do that in one of the following ways, depending on your system:
-
-- Ubuntu or Debian: `sudo apt install libboost-all-dev`
-- Fedora or RedHat: `sudo yum install boost-devel`
-- MacOS using [Homebrew](https://brew.sh/): `brew install boost`
-- MacOS using [Mac Ports](https://www.macports.org/): `sudo port install boost`
-- Windows using [Chocolatey](https://chocolatey.org/): 
-   
-   - For Visual Studio 2022: `choco install boost-msvc-14.3`
-   - For Visual Studio 2019: `choco install boost-msvc-14.2`
-   - For Visual Studio 2017: `choco install boost-msvc-14.1`
-   
-- Windows using manual installers: [Boost Binaries on SourceForge](https://sourceforge.net/projects/boost/files/boost-binaries/)
-
-### 3. Install CMake
-
-You will also need a recent version of CMake (minimum version 3.15.0). 
-You can also install this with your favourite package manager 
-e.g. apt, yum, homebrew, chocolatey as above), or obtain it from 
-the [CMake downloads page](https://cmake.org/download/).
-
-Note that Microsoft ships Visual Studio with a suitable version 
-command-line only version of CMake since Visual Studio 2019 
-(the Visual Studio 2017 CMake version is outdated). 
-It is available in the `PATH` from a Visual Studio command prompt
-and can alternatively be used directly from the IDE.
-
-### 4. QuantLib CMake Configuration
-
-The build is driven from the QuantLib directory - XAD and qlxad are
-inserted using [QuantLib's extension hook](https://www.quantlib.org/install/cmake.shtml#extensions). 
-
-Configure the QuantLib CMake build with setting the following parameters:
-
-- `QL_EXTERNAL_SUBDIRECTORIES=/path/to/xad;/path/to/qlxad`
-- `QL_EXTRA_LINK_LIBRARIES=qlxad`
-- `QL_NULL_AS_FUNCTIONS=ON`
-- `XAD_STATIC_MSVC_RUNTIME=ON`
-
-For Linux, the command-line for this is:
-
-```shell
-cd QuantLib
-mkdir build
-cd build
-cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release \
-  -DQL_EXTERNAL_SUBDIRECTORIES="`pwd`/../../xad;`pwd`/../../qlxad" \
-  -DQL_EXTRA_LINK_LIBRARIES=qlxad \
-  -DQL_NULL_AS_FUNCTIONS=ON \
-  -DXAD_STATIC_MSVC_RUNTIME=ON
-```
-
-In Windows, you can use the CMake GUI to generate the build files,
-setting the same variables as above.
-
-### 5. Building
-
-The generated build files can now be built using the regular native
-build tools. For example, in Linux `make` can be run, 
-and in Visual Studio, the solution can be opened and built.
-Note that we recommend Release mode for Windows builds.
-
-### 6. Running the Tests
-
-There are two test executables that get built - the regular QuantLib
-test suite with all the standard tests from the mainline repository,
-as well as the QuantLib XAD test suite from the qlxad repository.
-Both are using the overloaded XAD type for `double`,
-but only the XAD suite checks for the correctness of the derivatives as well.
-
-These executables can simply be run to execute all the tests.
-We recommend to use the parameter `--log_level=message` to see the test 
-progress.
-Alternatively, CTest can also be used to execute them.
-
-### 7. Running the Examples
-
-Apart from the regular QuantLib examples, there are XAD-specific examples
-in the qlxad repository, in the `Examples` folder.
-These demonstrate the use of XAD to calculate derivatives using AAD.
+Please read [CONTRIBUTING](CONTRIBUTING.md) for the process of contributing to this project.
+Please also obey our [Code of Conduct](CODE_OF_CONDUCT.md) in all communication.
 
 ## Planned Features
 
 - Gradually port more of the QuantLib tests and add AAD-based sensitivity calculation
 - Add more Examples
+
+## Authors
+
+-   Various contributors from Xcelerit
+-   See also the list of [contributors](https://github.com/auto-differentiation/qlxad/contributors) who participated in the project.
 
 
 ## License
