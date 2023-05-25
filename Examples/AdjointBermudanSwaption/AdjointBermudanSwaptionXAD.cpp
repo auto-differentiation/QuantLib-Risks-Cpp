@@ -24,6 +24,8 @@
 /*
 This example demonstrates how to use XAD to price a Bermudan Swaption with
 sensitivities.
+
+TODO: Use the implicit function theorem for calibration with AAD.
 */
 
 #include <ql/qldefines.hpp>

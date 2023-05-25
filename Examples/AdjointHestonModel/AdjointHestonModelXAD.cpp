@@ -20,6 +20,8 @@
 
 /*
 This example uses XAD to calculate sensitivities of a Heston pricer.
+
+TODO: Use the implicit function theorem for calibration with AAD.
 */
 
 #include <ql/qldefines.hpp>
