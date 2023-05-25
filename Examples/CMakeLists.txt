@@ -1,2 +1,10 @@
-add_subdirectory(AdjointSwap)
+add_subdirectory(AdjointAmericanEquityOption)
 add_subdirectory(AdjointBermudanSwaption)
+add_subdirectory(AdjointCDS)
+add_subdirectory(AdjointEuropeanEquityOption)
+add_subdirectory(AdjointHestonModel)
+add_subdirectory(AdjointMulticurveBootstrapping)
+add_subdirectory(AdjointSwap)
+add_subdirectory(AdjointReplication)
+
+

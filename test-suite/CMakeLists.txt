@@ -1,14 +1,30 @@
 set(QLXAD_TEST_SOURCES
     americanoption_xad.cpp
+    europeanoption_xad.cpp
+    barrieroption_xad.cpp
+    forwardrateagreement_xad.cpp
     batesmodel_xad.cpp
+    swap_xad.cpp
     quantlibtestsuite_xad.cpp
     utilities_xad.cpp
+    creditdefaultswap_xad.cpp
+    bonds_xad.cpp
+    bermudanswaption_xad.cpp
+    hestonmodel_xad.cpp
 )
 
 set(QLXAD_TEST_HEADERS
     americanoption_xad.hpp
+    europeanoption_xad.hpp
+    barrieroption_xad.hpp
+    forwardrateagreement_xad.hpp
     batesmodel_xad.hpp
+    swap_xad.hpp
     utilities_xad.hpp
+    bonds_xad.hpp
+    creditdefaultswap_xad.cpp
+    bermudanswaption_xad.hpp
+    hestonmodel_xad.hpp
 )
 
 if(QL_BUILD_TEST_SUITE)

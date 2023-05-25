@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2005 Klaus Spanderen
- Copyright (C) 2022 Xcelerit
+ Copyright (C) 2023 Xcelerit
 
  This file is part of QuantLib / XAD integration module.
  It is modified from QuantLib, a free-software/open-source library
@@ -23,8 +23,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-class BatesModelXadTest {
+class CreditDefaultSwapXadTest {
   public:
-    static void testBatesModelDerivatives();
+    static void testCreditDefaultSwapDerivatives();
     static boost::unit_test_framework::test_suite* suite();
 };

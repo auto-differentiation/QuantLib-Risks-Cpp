@@ -5,7 +5,7 @@
 #  QuantLib. XAD is a fast and comprehensive C++ library for
 #  automatic differentiation.
 #
-#  Copyright (C) 2010-2022 Xcelerit Computing Ltd.
+#  Copyright (C) 2010-2023 Xcelerit Computing Ltd.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -30,7 +30,11 @@ target_include_directories(qlxad INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
     $<INSTALL_INTERFACE:${QL_INSTALL_INCLUDEDIR}>
 )
-target_compile_definitions(qlxad INTERFACE QL_INCLUDE_FIRST=ql/qlxad.hpp)
+if(NOT QLXAD_DISABLE_AAD)
+    target_compile_definitions(qlxad INTERFACE QL_INCLUDE_FIRST=ql/qlxad.hpp)
+else()
+    target_compile_definitions(qlxad INTERFACE QLXAD_DISABLE_AAD=1)
+endif()
 if(MSVC)
     target_compile_options(qlxad INTERFACE /bigobj)
 endif()

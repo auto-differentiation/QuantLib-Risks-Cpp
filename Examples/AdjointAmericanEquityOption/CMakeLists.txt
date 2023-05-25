@@ -1,0 +1,5 @@
+add_executable(AdjointAmericanEquityOption AdjointAmericanEquityOptionXAD.cpp)
+target_link_libraries(AdjointAmericanEquityOption ql_library)
+if(QL_INSTALL_EXAMPLES)
+    install(TARGETS AdjointAmericanEquityOption RUNTIME DESTINATION  ${QL_INSTALL_EXAMPLESDIR})
+endif()

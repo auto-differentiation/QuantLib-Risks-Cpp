@@ -53,6 +53,6 @@ accepted:
 
 This repository follows [QuantLib's coding style](https://www.quantlib.org/style.shtml).
 
-[pr]: https://github.com/xcelerit/qlxad/compare/
+[pr]: https://github.com/auto-differentiation/qlxad/compare/
 
 [cla]: https://gist.github.com/xcelerit-dev/ee51f6c0a3365ae2fc2489e092366de2

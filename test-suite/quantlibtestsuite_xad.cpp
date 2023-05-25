@@ -33,7 +33,15 @@
 #endif
 
 #include "americanoption_xad.hpp"
+#include "barrieroption_xad.hpp"
 #include "batesmodel_xad.hpp"
+#include "bermudanswaption_xad.hpp"
+#include "bonds_xad.hpp"
+#include "creditdefaultswap_xad.hpp"
+#include "europeanoption_xad.hpp"
+#include "forwardrateagreement_xad.hpp"
+#include "hestonmodel_xad.hpp"
+#include "swap_xad.hpp"
 #include "utilities_xad.hpp"
 
 using namespace boost::unit_test_framework;
@@ -68,7 +76,16 @@ test_suite* init_unit_test_suite(int, char*[]) {
     auto* test = BOOST_TEST_SUITE("QuantLib XAD test suite");
 
     test->add(AmericanOptionXadTest::suite());
+    test->add(EuropeanOptionXadTest::suite());
+    test->add(BarrierOptionXadTest::suite());
     test->add(BatesModelXadTest::suite());
+    test->add(SwapXadTest::suite());
+    test->add(CreditDefaultSwapXadTest::suite());
+    test->add(ForwardRateAgreementXadTest::suite());
+    test->add(BondsXadTest::suite());
+    test->add(BermudanSwaptionXadTest::suite());
+    test->add(HestonModelXadTest::suite());
+
 
     return test;
 }

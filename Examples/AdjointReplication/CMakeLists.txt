@@ -1,0 +1,5 @@
+add_executable(AdjointReplication AdjointReplicationXAD.cpp)
+target_link_libraries(AdjointReplication ql_library)
+if(QL_INSTALL_EXAMPLES)
+    install(TARGETS AdjointReplication RUNTIME DESTINATION  ${QL_INSTALL_EXAMPLESDIR})
+endif()
