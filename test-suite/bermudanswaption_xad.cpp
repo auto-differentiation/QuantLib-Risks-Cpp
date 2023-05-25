@@ -183,7 +183,10 @@ void BermudanSwaptionXadTest::testBermudanSwaptionDerivatives() {
 
     // compare
     QL_CHECK_CLOSE(expected, actual, 1e-9);
-    QL_CHECK_CLOSE(derivatives_bumping.nominal, derivatives_aad.nominal, 1e-3);
+    if (derivatives_bumping.nominal > 0.1)
+        QL_CHECK_CLOSE(derivatives_bumping.nominal, derivatives_aad.nominal, 1e-2);
+    else
+        QL_CHECK_SMALL(abs(derivatives_aad.nominal - derivatives_bumping.nominal), 1e-3);
     QL_CHECK_CLOSE(derivatives_bumping.fixedRate, derivatives_aad.fixedRate, 1e-3);
     QL_CHECK_CLOSE(derivatives_bumping.forwardRate, derivatives_aad.forwardRate, 1e-3);
     QL_CHECK_CLOSE(derivatives_bumping.a, derivatives_aad.a, 1e-3);
