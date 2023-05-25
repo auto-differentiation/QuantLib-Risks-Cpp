@@ -33,7 +33,12 @@ env:
   xad_repo: ${{ github.event.inputs.xad_repo || 'xcelerit/XAD' }}
   xad_branch: ${{ github.event.inputs.xad_branch || 'main' }}
 jobs:
+
   xad-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        disable_aad: ["ON", "OFF"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -63,7 +68,7 @@ jobs:
         cd QuantLib
         mkdir build
         cd build
-        cmake -G Ninja -DBOOST_ROOT=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
+        cmake -G Ninja -DBOOST_ROOT=/usr -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
     - name: Compile
       run: |
         cd QuantLib/build
@@ -76,7 +81,13 @@ jobs:
       run: |
         cd QuantLib/build
         ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message
+
+
   xad-win:
+    strategy:
+      fail-fast: false
+      matrix:
+        disable_aad: ["ON", "OFF"]
     runs-on: windows-2022
     env:
       vsvarsall: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
@@ -115,7 +126,7 @@ jobs:
         mkdir build
         cd build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
-        cmake .. -G Ninja -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON
+        cmake .. -G Ninja -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON
     - name: Build
       shell: cmd
       run: |
@@ -134,7 +145,13 @@ jobs:
         cd QuantLib\build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
         .\qlxad\test-suite\quantlib-xad-test-suite --log_level=message
+
+
   xad-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        disable_aad: ["ON", "OFF"]
     runs-on: macos-latest
     env:
       CXXFLAGS: -stdlib=libc++ -mmacosx-version-min=10.9
@@ -167,7 +184,7 @@ jobs:
         cd QuantLib
         mkdir build
         cd build
-        cmake -G Ninja -DBOOST_ROOT=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
+        cmake -G Ninja -DBOOST_ROOT=/usr -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
     - name: Compile
       run: |
         cd QuantLib/build
