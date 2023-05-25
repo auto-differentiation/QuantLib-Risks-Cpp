@@ -61,7 +61,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.5
       with:
-        key: linux
+        key: linux-${{ matrix.disable_aad }}
         max-size: 650M
     - name: Configure
       run: |
@@ -78,6 +78,7 @@ jobs:
         cd QuantLib/build
         ./test-suite/quantlib-test-suite --log_level=message    
     - name: Test QlXAD
+      if: ${{ matrix.disable_aad == 'OFF' }}
       run: |
         cd QuantLib/build
         ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message
@@ -108,7 +109,7 @@ jobs:
     - name: sccache
       uses: hendrikmuhs/ccache-action@v1.2.5
       with:
-        key: windows
+        key: windows-${{ matrix.disable_aad }}
         variant: sccache
         max-size: 650M
     - name: Setup
@@ -140,6 +141,7 @@ jobs:
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
         .\test-suite\quantlib-test-suite --log_level=message
     - name: Test QlXAD
+      if: ${{ matrix.disable_aad == 'OFF' }}
       shell: cmd
       run: |
         cd QuantLib\build
@@ -177,7 +179,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.5
       with:
-        key: macos
+        key: macos-${{ matrix.disable_aad }}
         max-size: 650M
     - name: Configure
       run: |
@@ -194,6 +196,7 @@ jobs:
         cd QuantLib/build
         ./test-suite/quantlib-test-suite --log_level=message    
     - name: Test QlXAD
+      if: ${{ matrix.disable_aad == 'OFF' }}
       run: |
         cd QuantLib/build
         ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message

@@ -206,7 +206,7 @@ Real priceWithSensi(const std::vector<Date>& dates,
     Real eps = 1e-5;
     sensiOutput.rhos.clear();
     sensiOutput.rhos.reserve(t_rates.size());
-    for (int i = 0; i < t_rates.size(); ++i) {
+    for (Size i = 0; i < t_rates.size(); ++i) {
         t_rates[i] += eps;
         Real v1 =
             priceEuropean(dates, t_rates, t_vols, calendar, maturity, t_strikes, settlementDate,
@@ -217,7 +217,7 @@ Real priceWithSensi(const std::vector<Date>& dates,
 
     sensiOutput.vegas.clear();
     sensiOutput.vegas.reserve(t_vols.size());
-    for (int i = 0; i < t_vols.size(); ++i) {
+    for (Size i = 0; i < t_vols.size(); ++i) {
         t_vols[i] += eps;
         Real v1 =
             priceEuropean(dates, t_rates, t_vols, calendar, maturity, t_strikes, settlementDate,
@@ -228,7 +228,7 @@ Real priceWithSensi(const std::vector<Date>& dates,
 
     sensiOutput.strikeSensitivities.clear();
     sensiOutput.strikeSensitivities.reserve(t_strikes.size());
-    for (int i = 0; i < t_strikes.size(); ++i) {
+    for (Size i = 0; i < t_strikes.size(); ++i) {
         t_strikes[i] += eps;
         Real v1 =
             priceEuropean(dates, t_rates, t_vols, calendar, maturity, t_strikes, settlementDate,
@@ -240,7 +240,7 @@ Real priceWithSensi(const std::vector<Date>& dates,
     auto t_underlyings = underlyings;
     sensiOutput.deltas.clear();
     sensiOutput.deltas.reserve(underlyings.size());
-    for (int i = 0; i < t_underlyings.size(); ++i) {
+    for (Size i = 0; i < t_underlyings.size(); ++i) {
         t_underlyings[i] += eps;
         Real v1 =
             priceEuropean(dates, t_rates, t_vols, calendar, maturity, t_strikes, settlementDate,

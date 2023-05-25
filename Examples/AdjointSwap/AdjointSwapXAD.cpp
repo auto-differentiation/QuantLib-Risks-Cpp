@@ -250,7 +250,7 @@ double priceWithSensi(const std::vector<double>& marketQuotes,
     Real v = pricePortfolio(curveHandle, portfolio);
 
     Real eps = 1e-5;
-    for (int i = 0; i < marketQuotesCpy.size(); ++i) {
+    for (Size i = 0; i < marketQuotesCpy.size(); ++i) {
         marketQuotesCpy[i] += eps;
         auto curveHandle =
             bootstrapCurve(Settings::instance().evaluationDate(), marketQuotesCpy, maxMaturity);
