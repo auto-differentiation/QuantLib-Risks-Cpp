@@ -1,7 +1,7 @@
 /* -*- mode: c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 /*
- Copyright (C) 2022 Xcelerit
+ Copyright (C) 2022, 2023 Xcelerit
 
  This file is part of QuantLib / XAD integration module.
  It is modified from QuantLib, a free-software/open-source library
@@ -18,20 +18,31 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
+/*
+This example shows how to calculate sensitivities to market quotes for
+pricing a portfolio of swaps using XAD.
+It also measures the performance for calculating sensitivities,
+either with XAD or with plain doubles and bumping (when QLXAD_DISABLE_AAD is ON).
+*/
 
-#include <ql/quotes/simplequote.hpp>
+
+#include <ql/qldefines.hpp>
+#if !defined(BOOST_ALL_NO_LIB) && defined(BOOST_MSVC)
+#    include <ql/auto_link.hpp>
+#endif
 #include <ql/indexes/ibor/euribor.hpp>
+#include <ql/math/randomnumbers/mt19937uniformrng.hpp>
+#include <ql/pricingengines/swap/discountingswapengine.hpp>
+#include <ql/quotes/simplequote.hpp>
+#include <ql/termstructures/iterativebootstrap.hpp>
+#include <ql/termstructures/yield/bootstraptraits.hpp>
+#include <ql/termstructures/yield/piecewiseyieldcurve.hpp>
+#include <ql/termstructures/yield/ratehelpers.hpp>
+#include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/time/calendars/target.hpp>
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/daycounters/thirty360.hpp>
-#include <ql/termstructures/yieldtermstructure.hpp>
-#include <ql/termstructures/yield/ratehelpers.hpp>
-#include <ql/termstructures/yield/bootstraptraits.hpp>
-#include <ql/termstructures/iterativebootstrap.hpp>
-#include <ql/termstructures/yield/piecewiseyieldcurve.hpp>
-#include <ql/math/randomnumbers/mt19937uniformrng.hpp>
-#include <ql/pricingengines/swap/discountingswapengine.hpp>
-
+#include <XAD/XAD.hpp>
 #include <chrono>
 #include <vector>
 
@@ -44,10 +55,10 @@ const int Nfra = 5;
 void prepareQuotes(Size maximumMaturity, std::vector<double>& marketQuotes) {
     // setting up market quotes
     // deposit quotes on, tn, sn, sw, 1m, ... , 6m
-    for (Size i = 0; i < Ndepos; ++i) 
+    for (Size i = 0; i < Ndepos; ++i)
         marketQuotes.push_back(0.0010 + i * 0.0002);
     // fra quotes 1-7, ... , 5-11
-    for (Size i = 0; i < Nfra; ++i) 
+    for (Size i = 0; i < Nfra; ++i)
         marketQuotes.push_back(0.0030 + i * 0.0005);
     // swap quotes 1y, ... , maximum maturity
     for (Size i = 0; i < maximumMaturity; ++i)
@@ -55,8 +66,8 @@ void prepareQuotes(Size maximumMaturity, std::vector<double>& marketQuotes) {
 }
 
 // bootstraps the curve used for the swaps
-Handle<YieldTermStructure> bootstrapCurve(Date referenceDate, const std::vector<Real>& marketQuotes,
-                                          Size maximumMaturity) {
+Handle<YieldTermStructure>
+bootstrapCurve(Date referenceDate, const std::vector<Real>& marketQuotes, Size maximumMaturity) {
     // build quotes
     std::vector<boost::shared_ptr<SimpleQuote>> quotes;
     std::transform(marketQuotes.begin(), marketQuotes.end(), std::back_inserter(quotes),
@@ -113,11 +124,13 @@ Handle<YieldTermStructure> bootstrapCurve(Date referenceDate, const std::vector<
 
     // build a piecewise yield curve
     using CurveType = PiecewiseYieldCurve<ZeroYield, Linear, IterativeBootstrap>;
-    return Handle<YieldTermStructure>(boost::make_shared<CurveType>(referenceDate, instruments, Actual365Fixed()));
+    return Handle<YieldTermStructure>(
+        boost::make_shared<CurveType>(referenceDate, instruments, Actual365Fixed()));
 }
 
 // creates the Swap portfolio, given the curve
-std::vector<boost::shared_ptr<VanillaSwap>> setupPortfolio(Size portfolioSize, Size maximumMaturity, Handle<YieldTermStructure> curveHandle) {
+std::vector<boost::shared_ptr<VanillaSwap>>
+setupPortfolio(Size portfolioSize, Size maximumMaturity, Handle<YieldTermStructure> curveHandle) {
     auto euribor6mYts = boost::make_shared<Euribor>(6 * Months, curveHandle);
 
     // set up a vanilla swap portfolio
@@ -132,7 +145,8 @@ std::vector<boost::shared_ptr<VanillaSwap>> setupPortfolio(Size portfolioSize, S
         Real fixedRate = mt.nextReal() * 0.10;
         Date effective(6, October, 2014);
         Date termination = TARGET().advance(
-            effective, static_cast<Size>(mt.nextReal() * static_cast<double>(maximumMaturity) + 1.) * Years);
+            effective,
+            static_cast<Size>(mt.nextReal() * static_cast<double>(maximumMaturity) + 1.) * Years);
 
         Schedule fixedSchedule(effective, termination, 1 * Years, TARGET(), ModifiedFollowing,
                                Following, DateGeneration::Backward, false);
@@ -154,7 +168,7 @@ Real pricePortfolio(Handle<YieldTermStructure> curveHandle,
 
     auto pricingEngine = boost::make_shared<DiscountingSwapEngine>(curveHandle);
     Real y = 0.0;
-    for (auto& swap: portfolio) {
+    for (auto& swap : portfolio) {
         swap->setPricingEngine(pricingEngine);
         y += swap->NPV();
     }
@@ -178,13 +192,17 @@ Real pricePlain(const std::vector<double>& marketQuotes, Size portfolioSize, Siz
     return v;
 }
 
+#ifndef QLXAD_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;
 tape_type tape;
 
 // price with sensitivities using AAD
-double priceWithSensi(const std::vector<double>& marketQuotes,  Size portfolioSize, Size maxMaturity, std::vector<double>& gradient) {
+double priceWithSensi(const std::vector<double>& marketQuotes,
+                      Size portfolioSize,
+                      Size maxMaturity,
+                      std::vector<double>& gradient) {
 
     tape.clearAll();
     gradient.clear();
@@ -193,7 +211,7 @@ double priceWithSensi(const std::vector<double>& marketQuotes,  Size portfolioSi
     std::vector<Real> marketQuotesAD(marketQuotes.begin(), marketQuotes.end());
 
     // register independent variables with the tape as inputs and start a new recording
-    tape.registerInputs(marketQuotesAD);  
+    tape.registerInputs(marketQuotesAD);
     tape.newRecording();
 
     // build curve and price
@@ -213,10 +231,42 @@ double priceWithSensi(const std::vector<double>& marketQuotes,  Size portfolioSi
     return value(v);
 }
 
+#else
+
+// price with sensitivities using Bumping
+double priceWithSensi(const std::vector<double>& marketQuotes,
+                      Size portfolioSize,
+                      Size maxMaturity,
+                      std::vector<double>& gradient) {
+    gradient.clear();
+
+    // convert double market quotes into AD type (Real is active double type)
+    std::vector<Real> marketQuotesCpy(marketQuotes.begin(), marketQuotes.end());
+
+    // build curve and price
+    auto curveHandle =
+        bootstrapCurve(Settings::instance().evaluationDate(), marketQuotesCpy, maxMaturity);
+    auto portfolio = setupPortfolio(portfolioSize, maxMaturity, curveHandle);
+    Real v = pricePortfolio(curveHandle, portfolio);
+
+    Real eps = 1e-5;
+    for (Size i = 0; i < marketQuotesCpy.size(); ++i) {
+        marketQuotesCpy[i] += eps;
+        auto curveHandle =
+            bootstrapCurve(Settings::instance().evaluationDate(), marketQuotesCpy, maxMaturity);
+        auto portfolio = setupPortfolio(portfolioSize, maxMaturity, curveHandle);
+        Real v1 = pricePortfolio(curveHandle, portfolio);
+        gradient.push_back(xad::value((v - v1) / eps));
+        marketQuotesCpy[i] -= eps;
+    }
+
+    return xad::value(v);
+}
+
+
+#endif
 
 void printResults(double v, const std::vector<double>& gradient) {
-    std::cout << "--------- Pricing with AAD ------------\n\n";
-
     std::cout.precision(2);
     std::cout << std::fixed;
     std::cout.imbue(std::locale(""));
@@ -237,43 +287,55 @@ void printResults(double v, const std::vector<double>& gradient) {
 }
 
 int main() {
-    
-    Size portfolioSize = 50;
-    Size maxMaturity = 40;
+    try {
+        Size portfolioSize = 50;
+        Size maxMaturity = 40;
 
-    // market Quotes
-    std::vector<double> marketQuotes;
-    prepareQuotes(maxMaturity, marketQuotes);
+        // market Quotes
+        std::vector<double> marketQuotes;
+        prepareQuotes(maxMaturity, marketQuotes);
 
-    // evaluation date
-    Date referenceDate(2, January, 2015);
-    Settings::instance().evaluationDate() = referenceDate;
+        // evaluation date
+        Date referenceDate(2, January, 2015);
+        Settings::instance().evaluationDate() = referenceDate;
 
-    constexpr int N = 20;
-    std::cout << "Pricing portfolio of " << portfolioSize << " swaps...\n";
-    auto start = std::chrono::high_resolution_clock::now();
-    Real v = 0.0;
-    for (int i = 0; i < N; ++i) v = pricePlain(marketQuotes, portfolioSize, maxMaturity);
-    auto end = std::chrono::high_resolution_clock::now();
-    auto time_plain = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) / N * 1e-3;
-    std::cout << "portfolio Value: " << v << "\n";
-    
-    std::vector<double> gradient;
+        constexpr int N = 20;
+        std::cout << "Pricing portfolio of " << portfolioSize << " swaps...\n";
+        auto start = std::chrono::high_resolution_clock::now();
+        Real v = 0.0;
+        for (int i = 0; i < N; ++i)
+            v = pricePlain(marketQuotes, portfolioSize, maxMaturity);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto time_plain =
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) *
+            1e-3 / N;
+        std::cout << "portfolio Value: " << v << "\n";
 
-    std::cout << "Pricing portfolio of " << portfolioSize << " swaps with sensitivities...\n";
-    start = std::chrono::high_resolution_clock::now();
-    double v2 = 0.0;
-    for (int i = 0; i < N; ++i)
-        v2 = priceWithSensi(marketQuotes, portfolioSize, maxMaturity, gradient);
-    end = std::chrono::high_resolution_clock::now();
-    auto time_sensi = static_cast<double>(
-                    std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) /
-                N * 1e-3;
-    std::cout << "portfolio Value: " << v2 << "\n";
+        std::vector<double> gradient;
 
-    printResults(v2, gradient);
+        std::cout << "Pricing portfolio of " << portfolioSize << " swaps with sensitivities...\n";
+        start = std::chrono::high_resolution_clock::now();
+        double v2 = 0.0;
+        for (int i = 0; i < N; ++i)
+            v2 = priceWithSensi(marketQuotes, portfolioSize, maxMaturity, gradient);
+        end = std::chrono::high_resolution_clock::now();
+        auto time_sensi =
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) *
+            1e-3 / N;
 
-    std::cout << "Plain time : " << time_plain << "ms\n"
-              << "Sensi time : " << time_sensi << "ms\n"
-              << "Factor     : " << time_sensi/time_plain << "x\n";
+        printResults(v2, gradient);
+
+        std::cout << "Plain time : " << time_plain << "ms\n"
+                  << "Sensi time : " << time_sensi << "ms\n"
+                  << "Factor     : " << time_sensi / time_plain << "x\n";
+        return 0;
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    } catch (...) {
+        std::cerr << "unknown error" << std::endl;
+        return 1;
+    }
 }

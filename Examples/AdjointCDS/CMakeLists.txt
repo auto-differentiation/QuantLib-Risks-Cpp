@@ -1,0 +1,5 @@
+add_executable(AdjointCDS AdjointCdsXAD.cpp)
+target_link_libraries(AdjointCDS ql_library)
+if(QL_INSTALL_EXAMPLES)
+    install(TARGETS AdjointCDS RUNTIME DESTINATION  ${QL_INSTALL_EXAMPLESDIR})
+endif()

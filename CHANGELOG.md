@@ -11,6 +11,10 @@ Note that we follow QuantLib's releases in this repository, with matching versio
 
 ### Added
 
+- A new CMake option `QLXAD_DISABLE_AAD` to allow running the Examples without AAD
+- A new set of Examples, partially enabled for benchmarking against double
+- Additional tests in the adjoint test suite
+
 ### Changed
 
 ### Deprecated
@@ -24,8 +28,8 @@ Note that we follow QuantLib's releases in this repository, with matching versio
 Initial open-source release, compatible with [QuantLib v1.28](https://github.com/lballabio/QuantLib/releases/tag/QuantLib-v1.28).
 
 
-[unreleased]: https://github.com/xcelerit/qlxad/compare/v1.28...HEAD
+[unreleased]: https://github.com/auto-differentiation/qlxad/compare/v1.28...HEAD
 
-[1.28]: https://github.com/xcelerit/qlxad/tree/v1.28
+[1.28]: https://github.com/auto-differentiation/qlxad/tree/v1.28
 
 
