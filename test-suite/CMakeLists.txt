@@ -28,17 +28,17 @@ set(QLXAD_TEST_HEADERS
 )
 
 if(QL_BUILD_TEST_SUITE)
-    add_executable(qlxad_test_suite ${QLXAD_TEST_SOURCES} ${QLXAD_TEST_HEADERS})
-    set_target_properties(qlxad_test_suite PROPERTIES OUTPUT_NAME "quantlib-xad-test-suite")
+    add_executable(quantlib-xad_test_suite ${QLXAD_TEST_SOURCES} ${QLXAD_TEST_HEADERS})
+    set_target_properties(quantlib-xad_test_suite PROPERTIES OUTPUT_NAME "quantlib-xad-test-suite")
     if (NOT Boost_USE_STATIC_LIBS)
-        target_compile_definitions(qlxad_test_suite PRIVATE BOOST_ALL_DYN_LINK BOOST_TEST_DYN_LINK)
+        target_compile_definitions(quantlib-xad_test_suite PRIVATE BOOST_ALL_DYN_LINK BOOST_TEST_DYN_LINK)
     endif()
-    target_link_libraries(qlxad_test_suite PRIVATE
+    target_link_libraries(quantlib-xad_test_suite PRIVATE
         ql_library
         ql_unit_test_main
         ${QL_THREAD_LIBRARIES})
     if (QL_INSTALL_TEST_SUITE)
-        install(TARGETS qlxad_test_suite RUNTIME DESTINATION ${QL_INSTALL_BINDIR})
+        install(TARGETS quantlib-xad_test_suite RUNTIME DESTINATION ${QL_INSTALL_BINDIR})
     endif()
-    add_test(NAME quantlib_xad_test_suite COMMAND qlxad_test_suite --log_level=message)
+    add_test(NAME quantlib-xad_test_suite COMMAND quantlib-xad_test_suite --log_level=message)
 endif()

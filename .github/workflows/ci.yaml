@@ -53,7 +53,7 @@ jobs:
         path: XAD
     - uses: actions/checkout@v3
       with:
-        path: qlxad
+        path: quantlib-xad
     - name: Setup
       run: |
         sudo apt update
@@ -68,7 +68,7 @@ jobs:
         cd QuantLib
         mkdir build
         cd build
-        cmake -G Ninja -DBOOST_ROOT=/usr -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
+        cmake -G Ninja -DBOOST_ROOT=/usr -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/quantlib-xad" -DQL_EXTRA_LINK_LIBRARIES=quantlib-xad -DQL_NULL_AS_FUNCTIONS=ON ..
     - name: Compile
       run: |
         cd QuantLib/build
@@ -77,11 +77,11 @@ jobs:
       run: |
         cd QuantLib/build
         ./test-suite/quantlib-test-suite --log_level=message    
-    - name: Test QlXAD
+    - name: Test quantlib-xad
       if: ${{ matrix.disable_aad == 'OFF' }}
       run: |
         cd QuantLib/build
-        ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message
+        ./quantlib-xad/test-suite/quantlib-xad-test-suite --log_level=message
 
 
   xad-win:
@@ -105,7 +105,7 @@ jobs:
         path: XAD
     - uses: actions/checkout@v3
       with:
-        path: qlxad
+        path: quantlib-xad
     - name: sccache
       uses: hendrikmuhs/ccache-action@v1.2.5
       with:
@@ -127,7 +127,7 @@ jobs:
         mkdir build
         cd build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
-        cmake .. -G Ninja -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON
+        cmake .. -G Ninja -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/quantlib-xad" -DQL_EXTRA_LINK_LIBRARIES=quantlib-xad -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON
     - name: Build
       shell: cmd
       run: |
@@ -140,13 +140,13 @@ jobs:
         cd QuantLib\build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
         .\test-suite\quantlib-test-suite --log_level=message
-    - name: Test QlXAD
+    - name: Test quantlib-xad
       if: ${{ matrix.disable_aad == 'OFF' }}
       shell: cmd
       run: |
         cd QuantLib\build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
-        .\qlxad\test-suite\quantlib-xad-test-suite --log_level=message
+        .\quantlib-xad\test-suite\quantlib-xad-test-suite --log_level=message
 
 
   xad-macos:
@@ -170,7 +170,7 @@ jobs:
         path: XAD
     - uses: actions/checkout@v3
       with:
-        path: qlxad
+        path: quantlib-xad
     - name: Setup
       run: |
         brew install boost
@@ -186,7 +186,7 @@ jobs:
         cd QuantLib
         mkdir build
         cd build
-        cmake -G Ninja -DBOOST_ROOT=/usr -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/qlxad" -DQL_EXTRA_LINK_LIBRARIES=qlxad -DQL_NULL_AS_FUNCTIONS=ON ..
+        cmake -G Ninja -DBOOST_ROOT=/usr -DQLXAD_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/quantlib-xad" -DQL_EXTRA_LINK_LIBRARIES=quantlib-xad -DQL_NULL_AS_FUNCTIONS=ON ..
     - name: Compile
       run: |
         cd QuantLib/build
@@ -195,8 +195,8 @@ jobs:
       run: |
         cd QuantLib/build
         ./test-suite/quantlib-test-suite --log_level=message    
-    - name: Test QlXAD
+    - name: Test quantlib-xad
       if: ${{ matrix.disable_aad == 'OFF' }}
       run: |
         cd QuantLib/build
-        ./qlxad/test-suite/quantlib-xad-test-suite --log_level=message
+        ./quantlib-xad/test-suite/quantlib-xad-test-suite --log_level=message
