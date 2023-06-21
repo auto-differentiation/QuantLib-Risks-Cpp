@@ -1,10 +1,10 @@
 # QuantLib - XAD Integration Repository
 
 <p align="center" dir="auto">
-    <a href="https://github.com/auto-differentiation/qlxad/actions/workflows/ci.yaml">
-        <img src="https://img.shields.io/github/actions/workflow/status/auto-differentiation/qlxad/ci.yaml?label=Build%20%28XAD%20main%20vs%20QuantLib%20master%29" alt="GitHub Workflow Status" style="max-width: 100%;margin-right:20px">
+    <a href="https://github.com/auto-differentiation/quantlib-xad/actions/workflows/ci.yaml">
+        <img src="https://img.shields.io/github/actions/workflow/status/auto-differentiation/quantlib-xad/ci.yaml?label=Build%20%28XAD%20main%20vs%20QuantLib%20master%29" alt="GitHub Workflow Status" style="max-width: 100%;margin-right:20px">
     </a>
-    <a href="https://github.com/auto-differentiation/qlxad/blob/main/CONTRIBUTING.md">
+    <a href="https://github.com/auto-differentiation/quantlib-xad/blob/main/CONTRIBUTING.md">
         <img src="https://img.shields.io/badge/PRs%20-welcome-brightgreen.svg" alt="PRs Welcome" style="max-width: 100%;">
     </a>
 </p>
@@ -24,9 +24,9 @@ For detailed build instructions with [XAD](https://auto-differentiation.github.i
 
 ## Getting Help
 
-If you have found an issue, want to report a bug, or have a feature request, please raise a [GitHub issue](https://github.com/auto-differentiation/qlxad/issues).
+If you have found an issue, want to report a bug, or have a feature request, please raise a [GitHub issue](https://github.com/auto-differentiation/quantlib-xad/issues).
 
-For general questions about XAD, sharing ideas, engaging with community members, etc, please use [GitHub Discussions](https://github.com/auto-differentiation/qlxad/discussions).
+For general questions about XAD, sharing ideas, engaging with community members, etc, please use [GitHub Discussions](https://github.com/auto-differentiation/quantlib-xad/discussions).
 
 
 ## Contributing
@@ -42,7 +42,7 @@ Please also obey our [Code of Conduct](CODE_OF_CONDUCT.md) in all communication.
 ## Authors
 
 -   Various contributors from Xcelerit
--   See also the list of [contributors](https://github.com/auto-differentiation/qlxad/contributors) who participated in the project.
+-   See also the list of [contributors](https://github.com/auto-differentiation/quantlib-xad/contributors) who participated in the project.
 
 
 ## License

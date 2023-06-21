@@ -1,7 +1,7 @@
 ##############################################################################
 #   
 #
-#  This file is part of qlxad, an adaptor module to enable using XAD with
+#  This file is part of quantlib-xad, an adaptor module to enable using XAD with
 #  QuantLib. XAD is a fast and comprehensive C++ library for
 #  automatic differentiation.
 #
@@ -25,24 +25,24 @@
 set(QLXAD_HEADERS
     qlxad.hpp
 )
-add_library(qlxad INTERFACE)
-target_include_directories(qlxad INTERFACE
+add_library(quantlib-xad INTERFACE)
+target_include_directories(quantlib-xad INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
     $<INSTALL_INTERFACE:${QL_INSTALL_INCLUDEDIR}>
 )
 if(NOT QLXAD_DISABLE_AAD)
-    target_compile_definitions(qlxad INTERFACE QL_INCLUDE_FIRST=ql/qlxad.hpp)
+    target_compile_definitions(quantlib-xad INTERFACE QL_INCLUDE_FIRST=ql/qlxad.hpp)
 else()
-    target_compile_definitions(qlxad INTERFACE QLXAD_DISABLE_AAD=1)
+    target_compile_definitions(quantlib-xad INTERFACE QLXAD_DISABLE_AAD=1)
 endif()
 if(MSVC)
-    target_compile_options(qlxad INTERFACE /bigobj)
+    target_compile_options(quantlib-xad INTERFACE /bigobj)
 endif()
-target_link_libraries(qlxad INTERFACE XAD::xad)
-set_target_properties(qlxad PROPERTIES
+target_link_libraries(quantlib-xad INTERFACE XAD::xad)
+set_target_properties(quantlib-xad PROPERTIES
     EXPORT_NAME ${PACKAGE_NAME}
 )
-install(TARGETS qlxad EXPORT QlXadTargets)
+install(TARGETS quantlib-xad EXPORT QlXadTargets)
 foreach(file ${QLXAD_HEADERS})
     install(FILES ${file} DESTINATION "${QL_INSTALL_INCLUDEDIR}/ql")
 endforeach()

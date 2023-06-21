@@ -1,7 +1,7 @@
 ##############################################################################
 #   
 #
-#  This file is part of qlxad, an adaptor module to enable using XAD with
+#  This file is part of quantlib-xad, an adaptor module to enable using XAD with
 #  QuantLib. XAD is a fast and comprehensive C++ library for
 #  automatic differentiation.
 #
