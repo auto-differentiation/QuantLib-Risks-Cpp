@@ -55,4 +55,4 @@ This repository follows [QuantLib's coding style](https://www.quantlib.org/style
 
 [pr]: https://github.com/auto-differentiation/quantlib-xad/compare/
 
-[cla]: https://gist.github.com/xcelerit-dev/ee51f6c0a3365ae2fc2489e092366de2
+[cla]: https://gist.github.com/auto-differentiation-dev/ee51f6c0a3365ae2fc2489e092366de2
