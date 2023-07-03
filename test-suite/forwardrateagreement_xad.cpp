@@ -4,7 +4,7 @@
  Copyright (C) 2003, 2004 Ferdinando Ametrano
  Copyright (C) 2005, 2007 StatPro Italia srl
  Copyright (C) 2005 Joseph Wang
- Copyright (C) 2023 Xcelerit
+ Copyright (C) 2023 Xcelerit Computing Limited
 
  This file is part of QuantLib / XAD integration module.
  It is modified from QuantLib, a free-software/open-source library
