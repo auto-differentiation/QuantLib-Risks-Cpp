@@ -69,16 +69,16 @@ void prepareQuotes(Size maximumMaturity, std::vector<double>& marketQuotes) {
 Handle<YieldTermStructure>
 bootstrapCurve(Date referenceDate, const std::vector<Real>& marketQuotes, Size maximumMaturity) {
     // build quotes
-    std::vector<boost::shared_ptr<SimpleQuote>> quotes;
+    std::vector<ext::shared_ptr<SimpleQuote>> quotes;
     std::transform(marketQuotes.begin(), marketQuotes.end(), std::back_inserter(quotes),
-                   [](const Real& quote) { return boost::make_shared<SimpleQuote>(quote); });
+                   [](const Real& quote) { return ext::make_shared<SimpleQuote>(quote); });
 
     std::vector<RelinkableHandle<Quote>> quoteHandles;
     std::transform(quotes.begin(), quotes.end(), std::back_inserter(quoteHandles),
-                   [](boost::shared_ptr<SimpleQuote>& q) { return RelinkableHandle<Quote>(q); });
+                   [](ext::shared_ptr<SimpleQuote>& q) { return RelinkableHandle<Quote>(q); });
 
     // rate helpers
-    std::vector<boost::shared_ptr<RateHelper>> instruments;
+    std::vector<ext::shared_ptr<RateHelper>> instruments;
 
     // deposits
     for (Size i = 0; i < Ndepos; ++i) {
@@ -103,21 +103,21 @@ bootstrapCurve(Date referenceDate, const std::vector<Real>& marketQuotes, Size m
                 matTmp = (i - 3) * Months;
                 break;
         }
-        instruments.push_back(boost::make_shared<DepositRateHelper>(
+        instruments.push_back(ext::make_shared<DepositRateHelper>(
             quoteHandles[i], matTmp, fixingDays, TARGET(), ModifiedFollowing, false, Actual360()));
     }
 
     // FRAs
     for (Size i = 0; i < Nfra; ++i) {
         instruments.push_back(
-            boost::make_shared<FraRateHelper>(quoteHandles[Ndepos + i], (i + 1), (i + 7), 2,
+            ext::make_shared<FraRateHelper>(quoteHandles[Ndepos + i], (i + 1), (i + 7), 2,
                                               TARGET(), ModifiedFollowing, false, Actual360()));
     }
 
     // swaps
-    auto euribor6m = boost::make_shared<Euribor>(6 * Months);
+    auto euribor6m = ext::make_shared<Euribor>(6 * Months);
     for (Size i = 0; i < maximumMaturity; ++i) {
-        instruments.push_back(boost::make_shared<SwapRateHelper>(
+        instruments.push_back(ext::make_shared<SwapRateHelper>(
             quoteHandles[Ndepos + Nfra + i], (i + 1) * Years, TARGET(), Annual, ModifiedFollowing,
             Thirty360(Thirty360::European), euribor6m));
     }
@@ -125,20 +125,20 @@ bootstrapCurve(Date referenceDate, const std::vector<Real>& marketQuotes, Size m
     // build a piecewise yield curve
     using CurveType = PiecewiseYieldCurve<ZeroYield, Linear, IterativeBootstrap>;
     return Handle<YieldTermStructure>(
-        boost::make_shared<CurveType>(referenceDate, instruments, Actual365Fixed()));
+        ext::make_shared<CurveType>(referenceDate, instruments, Actual365Fixed()));
 }
 
 // creates the Swap portfolio, given the curve
-std::vector<boost::shared_ptr<VanillaSwap>>
+std::vector<ext::shared_ptr<VanillaSwap>>
 setupPortfolio(Size portfolioSize, Size maximumMaturity, Handle<YieldTermStructure> curveHandle) {
-    auto euribor6mYts = boost::make_shared<Euribor>(6 * Months, curveHandle);
+    auto euribor6mYts = ext::make_shared<Euribor>(6 * Months, curveHandle);
 
     // set up a vanilla swap portfolio
     euribor6mYts->addFixing(Date(2, October, 2014), 0.0040);
     euribor6mYts->addFixing(Date(3, October, 2014), 0.0040);
     euribor6mYts->addFixing(Date(6, October, 2014), 0.0040);
 
-    std::vector<boost::shared_ptr<VanillaSwap>> portfolio;
+    std::vector<ext::shared_ptr<VanillaSwap>> portfolio;
     MersenneTwisterUniformRng mt(42);
 
     for (Size j = 0; j < portfolioSize; ++j) {
@@ -154,7 +154,7 @@ setupPortfolio(Size portfolioSize, Size maximumMaturity, Handle<YieldTermStructu
         Schedule floatSchedule(effective, termination, 6 * Months, TARGET(), ModifiedFollowing,
                                Following, DateGeneration::Backward, false);
 
-        portfolio.push_back(boost::make_shared<VanillaSwap>(
+        portfolio.push_back(ext::make_shared<VanillaSwap>(
             VanillaSwap::Receiver, 10000000.0 / portfolioSize, fixedSchedule, fixedRate,
             Thirty360(Thirty360::European), floatSchedule, euribor6mYts, 0.0, Actual360()));
     }
@@ -164,9 +164,9 @@ setupPortfolio(Size portfolioSize, Size maximumMaturity, Handle<YieldTermStructu
 
 // prices the portfolio using the DiscountingSwapEngine
 Real pricePortfolio(Handle<YieldTermStructure> curveHandle,
-                    std::vector<boost::shared_ptr<VanillaSwap>>& portfolio) {
+                    std::vector<ext::shared_ptr<VanillaSwap>>& portfolio) {
 
-    auto pricingEngine = boost::make_shared<DiscountingSwapEngine>(curveHandle);
+    auto pricingEngine = ext::make_shared<DiscountingSwapEngine>(curveHandle);
     Real y = 0.0;
     for (auto& swap : portfolio) {
         swap->setPricingEngine(pricingEngine);

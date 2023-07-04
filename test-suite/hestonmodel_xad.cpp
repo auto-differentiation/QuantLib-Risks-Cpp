@@ -1,7 +1,7 @@
 // /* -*- mode: c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 // /*
-//  Copyright (C) 2023 Xcelerit
+//  Copyright (C) 2023 Xcelerit Computing Limited
 
 //  This file is part of QuantLib / XAD integration module.
 //  It is modified from QuantLib, a free-software/open-source library
