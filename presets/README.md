@@ -1,8 +1,12 @@
 # CMake User Presets for QuantLib
 
-This folder contains CMake user preset templates for QuantLib integration with XAD.
+This folder contains CMake user preset templates for QuantLib integration with
+XAD, which can be used in addition to the existing `CMakePresets.json` file
+that already ships with QuantLib to add additional presets for Quantlib-XAD.
+(A `CMakeUserPresets.json` can be placed beside the existing `CMakePresets.json` for user-specific local settings and is typically not checked in to Git).
 
-It provides the following extra configure presets for Windows / Visual Studio (all using the Ninja builder for using the built-in CMake support with "Open Folder"):
+It provides the following extra configure presets for Windows / Visual Studio 
+(all using the Ninja builder for using the built-in CMake support with "Open Folder"):
 
 - `windows-xad-msvc-release`
 - `windows-xad-msvc-debug`
@@ -26,13 +30,13 @@ And the following presets for Linux (both for Make and Ninja builders):
 - `linux-xad-gcc-ninja-release`
 - `linux-xad-gcc-ninja-relwithdebinfo`
 
-## Usage 
+## Usage
 
 **When `CMakeUserPresets.json` is not present in QuantLib folder**
 
 If you are not already using a `CMakeUserPresets.json` file with your QuantLib installation,
 you can simply copy to file in this folder into your QuantLib folder as is,
-renaming it to `CMakeUserPresets.json`. 
+renaming it to `CMakeUserPresets.json`.
 
 **When a `CMakeUserPresets.json` is already used**
 
@@ -48,7 +52,7 @@ in the top toolbar.
 
 **Usage with the command line**
 
-On the command-line, configure presets can be selected with the CMake command 
+On the command-line, configure presets can be selected with the CMake command
 as follows (from the QuantLib folder):
 
 ```
@@ -62,8 +66,9 @@ cmake --build .
 **Adjusting Settings**
 
 The top section in the presets file sets the base configuration for using XAD.
-It has the settings for `QL_EXTERNAL_SUBDIRECTORIES` and similar.
-These can be adjusted to your needs, pointing to the relevant folders, etc.
+It has the settings for `QL_EXTERNAL_SUBDIRECTORIES`, etc.
+These can be adjusted to your needs, pointing to the relevant folders
+where you checked out quantlib-xad and XAD.
 
-You can also add settings here about the boost locaton (`BOOST_ROOT`) or other
+You can also add settings here about the boost location (`BOOST_ROOT`) or other
 QuantLib or XAD related CMake settings.
