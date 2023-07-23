@@ -57,16 +57,6 @@ namespace {
     }
 }
 
-#if defined(QL_ENABLE_SESSIONS)
-namespace QuantLib {
-
-    ThreadKey sessionId() {
-        return {};
-    }
-
-}
-#endif
-
 test_suite* init_unit_test_suite(int, char*[]) {
 
     int argc = boost::unit_test::framework::master_test_suite().argc;

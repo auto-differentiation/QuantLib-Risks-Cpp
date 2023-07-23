@@ -1,0 +1,286 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "xad-base",
+      "hidden": true,
+      "cacheVariables": {
+        "QL_EXTERNAL_SUBDIRECTORIES": "${sourceDir}/../XAD;${sourceDir}/../quantlib-xad",
+        "QL_EXTRA_LINK_LIBRARIES": "quantlib-xad",
+        "QL_NULL_AS_FUNCTIONS": "ON",
+        "XAD_STATIC_MSVC_RUNTIME": "ON",
+        "QLXAD_DISABLE_AAD": "OFF"
+      }
+    },
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-msvc-base",
+      "hidden": true,
+      "inherits": "windows-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-msvc-x64"
+        }
+      }
+    },
+    {
+      "name": "windows-clang-base",
+      "hidden": true,
+      "inherits": "windows-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang-cl.exe"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64"
+        }
+      }
+    },
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        },
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "linux-gcc-x64",
+          "hostOS": [
+            "Linux"
+          ]
+        }
+      }
+    },
+    {
+      "name": "linux-gcc-base",
+      "hidden": true,
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "linux-clang-base",
+      "hidden": true,
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "ninja",
+      "hidden": true,
+      "generator": "Ninja"
+    },
+    {
+      "name": "make",
+      "hidden": true,
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "relwithdebinfo",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "linux-xad-clang-debug",
+      "inherits": [
+        "linux-clang-base",
+        "make",
+        "debug",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-clang-release",
+      "inherits": [
+        "linux-clang-base",
+        "make",
+        "release",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-clang-relwithdebinfo",
+      "inherits": [
+        "linux-clang-base",
+        "make",
+        "relwithdebinfo",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-gcc-debug",
+      "inherits": [
+        "linux-gcc-base",
+        "make",
+        "debug",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-gcc-release",
+      "inherits": [
+        "linux-gcc-base",
+        "make",
+        "release",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-gcc-relwithdebinfo",
+      "inherits": [
+        "linux-gcc-base",
+        "make",
+        "relwithdebinfo",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-clang-ninja-debug",
+      "inherits": [
+        "linux-clang-base",
+        "ninja",
+        "debug",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-clang-ninja-release",
+      "inherits": [
+        "linux-clang-base",
+        "ninja",
+        "release",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-clang-ninja-relwithdebinfo",
+      "inherits": [
+        "linux-clang-base",
+        "ninja",
+        "relwithdebinfo",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-gcc-ninja-debug",
+      "inherits": [
+        "linux-gcc-base",
+        "ninja",
+        "debug",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-gcc-ninja-release",
+      "inherits": [
+        "linux-gcc-base",
+        "ninja",
+        "release",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "linux-xad-gcc-ninja-relwithdebinfo",
+      "inherits": [
+        "linux-gcc-base",
+        "ninja",
+        "relwithdebinfo",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "windows-xad-clang-release",
+      "inherits": [
+        "windows-clang-base",
+        "ninja",
+        "release",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "windows-xad-clang-debug",
+      "inherits": [
+        "windows-clang-base",
+        "ninja",
+        "debug",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "windows-xad-clang-relwithdebinfo",
+      "inherits": [
+        "windows-clang-base",
+        "ninja",
+        "relwithdebinfo",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "windows-xad-msvc-release",
+      "inherits": [
+        "windows-msvc-base",
+        "ninja",
+        "release",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "windows-xad-msvc-debug",
+      "inherits": [
+        "windows-msvc-base",
+        "ninja",
+        "debug",
+        "xad-base"
+      ]
+    },
+    {
+      "name": "windows-xad-msvc-relwithdebinfo",
+      "inherits": [
+        "windows-clang-base",
+        "ninja",
+        "relwithdebinfo",
+        "xad-base"
+      ]
+    }
+  ]
+}
