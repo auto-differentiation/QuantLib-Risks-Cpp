@@ -27,6 +27,7 @@
 #include <boost/accumulators/statistics/tail_quantile.hpp>
 #include <boost/math/special_functions/math_fwd.hpp>
 #include <boost/math/tools/promotion.hpp>
+#include <boost/math/tools/rational.hpp>
 #include <boost/numeric/ublas/operations.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_floating_point.hpp>
@@ -79,7 +80,7 @@ namespace boost {
         // used by boost math functions a lot
         namespace tools {
             template <>
-            struct promote_args_2<xad::AReal<double>, xad::AReal<double> > {
+            struct promote_args_2<xad::AReal<double>, xad::AReal<double>> {
                 typedef xad::AReal<double> type;
             };
 
@@ -89,7 +90,7 @@ namespace boost {
             };
 
             template <class T>
-            struct promote_args_2<T, xad::AReal<double> > {
+            struct promote_args_2<T, xad::AReal<double>> {
                 typedef xad::AReal<double> type;
             };
         }
@@ -124,6 +125,17 @@ namespace boost {
         xad::AReal<double> erfc_inv(xad::UnaryExpr<double, Op, Expr> z, const Policy& pol) {
             return boost::math::erfc_inv(xad::AReal<double>(z), pol);
         }
+
+        namespace tools {
+            // boost/tools/rational.hpp, as it's called from erfc with expressions since boost 1.83
+
+            template <std::size_t N, class T, class Op, class Expr1, class Expr2>
+            xad::AReal<double> evaluate_polynomial(const T (&a)[N],
+                                                   xad::BinaryExpr<double, Op, Expr1, Expr2> val) {
+                return evaluate_polynomial(a, xad::AReal<double>(val));
+            }
+        }
+
 
         template <class RT1, class Op, class Expr, class RT3, class Policy>
         inline xad::AReal<double>
