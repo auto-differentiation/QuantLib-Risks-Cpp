@@ -18,7 +18,7 @@
 //  FOR A PARTICULAR PURPOSE.  See the license for more details.
 // */
 
-#include "hestonmodel_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/math/optimization/levenbergmarquardt.hpp>
 #include <ql/models/equity/hestonmodel.hpp>
@@ -43,6 +43,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(HestonModelXadTest)
 
 namespace {
 
@@ -225,7 +229,7 @@ void printResults(Real v, const std::vector<Real>& derivatives) {
         std::cout << "derivatives " << i << " = " << derivatives[i] << "\n";
 }
 
-void HestonModelXadTest::testHestonModelDerivatives() {
+BOOST_AUTO_TEST_CASE(testHestonModelDerivatives) {
     Date settlementDate(16, September, 2015);
     Settings::instance().evaluationDate() = settlementDate;
 
@@ -300,10 +304,6 @@ void HestonModelXadTest::testHestonModelDerivatives() {
     }
 }
 
-test_suite* HestonModelXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("Heston model derivatives tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&HestonModelXadTest::testHestonModelDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

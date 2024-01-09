@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "creditdefaultswap_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/instruments/creditdefaultswap.hpp>
 #include <ql/pricingengines/credit/midpointcdsengine.hpp>
@@ -40,6 +40,11 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(CreditDefaultSwapXadTests)
+
 
 namespace {
 
@@ -159,7 +164,7 @@ namespace {
     }
 }
 
-void CreditDefaultSwapXadTest::testCreditDefaultSwapDerivatives() {
+BOOST_AUTO_TEST_CASE(testCreditDefaultSwapDerivatives) {
 
     SavedSettings save;
     BOOST_TEST_MESSAGE("Testing credit default swap derivatives...");
@@ -184,10 +189,7 @@ void CreditDefaultSwapXadTest::testCreditDefaultSwapDerivatives() {
     QL_CHECK_CLOSE(derivatives_bumping.riskFreeRate, derivatives_aad.riskFreeRate, 1e-3);
 }
 
-test_suite* CreditDefaultSwapXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("credit default swap derivatives tests");
 
-    suite->add(QLXAD_TEST_CASE(&CreditDefaultSwapXadTest::testCreditDefaultSwapDerivatives));
+BOOST_AUTO_TEST_SUITE_END()
 
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "americanoption_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/instruments/vanillaoption.hpp>
 #include <ql/pricingengines/vanilla/baroneadesiwhaleyengine.hpp>
@@ -37,6 +37,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(AmericanOptionXadTests)
 
 
 namespace {
@@ -162,7 +166,7 @@ namespace {
     }
 }
 
-void AmericanOptionXadTest::testBaroneAdesiWhaleyDerivatives() {
+BOOST_AUTO_TEST_CASE(testBaroneAdesiWhaleyValues) {
 
     BOOST_TEST_MESSAGE("Testing Barone-Adesi and Whaley approximation "
                        "for American options derivatives...");
@@ -224,7 +228,7 @@ namespace {
 
 }
 
-void AmericanOptionXadTest::testBjerksundStenslandDerivatives() {
+BOOST_AUTO_TEST_CASE(testBjerksundStenslandDerivatives) {
     BOOST_TEST_MESSAGE("Testing Bjerksund and Stensland approximation "
                        "for American options derivatives...");
 
@@ -284,7 +288,7 @@ namespace {
     }
 }
 
-void AmericanOptionXadTest::testJuDerivatives() {
+BOOST_AUTO_TEST_CASE(testJuDerivatives) {
     BOOST_TEST_MESSAGE("Testing Ju approximation for American options derivatives...");
 
     // input
@@ -346,7 +350,7 @@ namespace {
 
 }
 
-void AmericanOptionXadTest::testFdDerivatives() {
+BOOST_AUTO_TEST_CASE(testFdDerivatives) {
     BOOST_TEST_MESSAGE("Testing finite-difference engine "
                        "for American options derivatives...");
 
@@ -371,13 +375,6 @@ void AmericanOptionXadTest::testFdDerivatives() {
     QL_CHECK_CLOSE(derivatives_bump.v, derivatives_aad.v, 1e-4);
 }
 
-test_suite* AmericanOptionXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("American option derivatives tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&AmericanOptionXadTest::testBaroneAdesiWhaleyDerivatives));
-    suite->add(QLXAD_TEST_CASE(&AmericanOptionXadTest::testBjerksundStenslandDerivatives));
-    suite->add(QLXAD_TEST_CASE(&AmericanOptionXadTest::testJuDerivatives));
-    suite->add(QLXAD_TEST_CASE(&AmericanOptionXadTest::testFdDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

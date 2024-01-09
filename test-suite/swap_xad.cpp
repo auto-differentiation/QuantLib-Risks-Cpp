@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "swap_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/cashflows/couponpricer.hpp>
 #include <ql/cashflows/fixedratecoupon.hpp>
@@ -39,6 +39,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(SwapXadTests)
 
 namespace {
 
@@ -160,7 +164,7 @@ namespace {
         return swap->NPV();
     }
 }
-void SwapXadTest::testSwapDerivatives() {
+BOOST_AUTO_TEST_CASE(testSwapDerivatives) {
 
     SavedSettings save;
     BOOST_TEST_MESSAGE("Testing European options derivatives...");
@@ -184,10 +188,6 @@ void SwapXadTest::testSwapDerivatives() {
     QL_CHECK_CLOSE(derivatives_Bumping.v, derivatives_aad.v, 1e-3);
 }
 
-test_suite* SwapXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("swap derivatives tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&SwapXadTest::testSwapDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

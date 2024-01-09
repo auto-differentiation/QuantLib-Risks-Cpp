@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "forwardrateagreement_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/indexes/ibor/usdlibor.hpp>
 #include <ql/instruments/forwardrateagreement.hpp>
@@ -37,6 +37,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(ForwardRateAgreementXadTests)
 
 namespace {
 
@@ -156,7 +160,7 @@ namespace {
     }
 }
 
-void ForwardRateAgreementXadTest::testForwardRateAgreementDerivatives() {
+BOOST_AUTO_TEST_CASE(testForwardRateAgreementDerivatives) {
 
     SavedSettings save;
     BOOST_TEST_MESSAGE("Testing forward rate agreement derivatives...");
@@ -181,10 +185,6 @@ void ForwardRateAgreementXadTest::testForwardRateAgreementDerivatives() {
     QL_CHECK_CLOSE(derivatives_bumping.rate, derivatives_aad.rate, 1e-3);
 }
 
-test_suite* ForwardRateAgreementXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("forward rate agreement derivatives tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&ForwardRateAgreementXadTest::testForwardRateAgreementDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()
