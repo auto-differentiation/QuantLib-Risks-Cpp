@@ -21,7 +21,7 @@
 */
 
 
-#include "batesmodel_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/instruments/europeanoption.hpp>
 #include <ql/math/optimization/levenbergmarquardt.hpp>
@@ -44,6 +44,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(BatesModelXadTests)
 
 namespace {
 
@@ -102,7 +106,7 @@ namespace {
     }
 }
 
-void BatesModelXadTest::testBatesModelDerivatives() {
+BOOST_AUTO_TEST_CASE(testBatesModelDerivatives) {
     BOOST_TEST_MESSAGE("Testing Bates Model derivatives...");
 
     SavedSettings backup;
@@ -137,10 +141,6 @@ void BatesModelXadTest::testBatesModelDerivatives() {
     QL_CHECK_CLOSE(gradient_bump[2], derivative(strike), 1e-4);
 }
 
-test_suite* BatesModelXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("Bates model tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&BatesModelXadTest::testBatesModelDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "bermudanswaption_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/cashflows/coupon.hpp>
 #include <ql/indexes/ibor/euribor.hpp>
@@ -40,6 +40,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(BermudanSwaptionXadTests)
 
 namespace {
 
@@ -165,7 +169,7 @@ namespace {
     }
 }
 
-void BermudanSwaptionXadTest::testBermudanSwaptionDerivatives() {
+BOOST_AUTO_TEST_CASE(testBermudanSwaptionDerivatives) {
 
     SavedSettings save;
     BOOST_TEST_MESSAGE("Testing bermudan swaption derivatives...");
@@ -193,10 +197,6 @@ void BermudanSwaptionXadTest::testBermudanSwaptionDerivatives() {
     QL_CHECK_CLOSE(derivatives_bumping.sigma, derivatives_aad.sigma, 1e-3);
 }
 
-test_suite* BermudanSwaptionXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("bermudan swaption derivatives tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&BermudanSwaptionXadTest::testBermudanSwaptionDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

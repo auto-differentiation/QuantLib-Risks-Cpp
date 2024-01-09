@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "europeanoption_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
 #include <ql/quotes/simplequote.hpp>
@@ -35,6 +35,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(EuropeanOptionXadTests)
 
 namespace {
 
@@ -135,7 +139,7 @@ namespace {
     }
 }
 
-void EuropeanOptionXadTest::testEuropeanOptionDerivatives() {
+BOOST_AUTO_TEST_CASE(testEuropeanOptionDerivatives) {
 
     SavedSettings save;
     BOOST_TEST_MESSAGE("Testing European options derivatives...");
@@ -160,10 +164,7 @@ void EuropeanOptionXadTest::testEuropeanOptionDerivatives() {
     QL_CHECK_CLOSE(derivatives_analytics.v, derivatives_aad.v, 1e-7);
 }
 
-test_suite* EuropeanOptionXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("european option derivatives tests");
 
-    suite->add(QLXAD_TEST_CASE(&EuropeanOptionXadTest::testEuropeanOptionDerivatives));
+BOOST_AUTO_TEST_SUITE_END()
 
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

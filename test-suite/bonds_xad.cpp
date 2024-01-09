@@ -21,7 +21,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-#include "bonds_xad.hpp"
+#include "toplevelfixture.hpp"
 #include "utilities_xad.hpp"
 #include <ql/experimental/callablebonds/callablebond.hpp>
 #include <ql/experimental/callablebonds/treecallablebondengine.hpp>
@@ -41,6 +41,10 @@
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
+
+BOOST_FIXTURE_TEST_SUITE(QuantLibXadTests, TopLevelFixture)
+
+BOOST_AUTO_TEST_SUITE(BondsXadTests)
 
 namespace {
 
@@ -153,7 +157,7 @@ namespace {
     }
 }
 
-void BondsXadTest::testBondsDerivatives() {
+BOOST_AUTO_TEST_CASE(testBondsDerivatives) {
 
     SavedSettings save;
     BOOST_TEST_MESSAGE("Testing bonds derivatives...");
@@ -178,10 +182,6 @@ void BondsXadTest::testBondsDerivatives() {
     QL_CHECK_CLOSE(derivatives_bumping.faceValue, derivatives_aad.faceValue, 1e-3);
 }
 
-test_suite* BondsXadTest::suite() {
-    auto* suite = BOOST_TEST_SUITE("bonds derivatives tests");
+BOOST_AUTO_TEST_SUITE_END()
 
-    suite->add(QLXAD_TEST_CASE(&BondsXadTest::testBondsDerivatives));
-
-    return suite;
-}
+BOOST_AUTO_TEST_SUITE_END()

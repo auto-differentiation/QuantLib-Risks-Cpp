@@ -154,22 +154,22 @@ Real priceWithSensi(const std::vector<Date>& dates,
     // obtain the sensitivities and store them in the result struct
     sensiOutput.rhos.clear();
     sensiOutput.rhos.reserve(t_rates.size());
-    for (int i = 0; i < t_rates.size(); ++i) {
+    for (Size i = 0; i < t_rates.size(); ++i) {
         sensiOutput.rhos.push_back(derivative(t_rates[i]));
     }
     sensiOutput.vegas.clear();
     sensiOutput.vegas.reserve(t_vols.size());
-    for (int i = 0; i < t_vols.size(); ++i) {
+    for (Size i = 0; i < t_vols.size(); ++i) {
         sensiOutput.vegas.push_back(derivative(t_vols[i]));
     }
     sensiOutput.strikeSensitivities.clear();
     sensiOutput.strikeSensitivities.reserve(t_strikes.size());
-    for (int i = 0; i < t_strikes.size(); ++i) {
+    for (Size i = 0; i < t_strikes.size(); ++i) {
         sensiOutput.strikeSensitivities.push_back(derivative(t_strikes[i]));
     }
     sensiOutput.deltas.clear();
     sensiOutput.deltas.reserve(t_underlyings.size());
-    for (int i = 0; i < t_underlyings.size(); ++i) {
+    for (Size i = 0; i < t_underlyings.size(); ++i) {
         sensiOutput.deltas.push_back(derivative(t_underlyings[i]));
     }
     sensiOutput.dividendRho = derivative(dividendYield);
