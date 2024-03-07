@@ -100,7 +100,7 @@ jobs:
       if: ${{ matrix.disable_aad == 'OFF' }}
       run: |
         mkdir installtest
-        cp qlxad/Examples/AdjointSwap/AdjointSwapXAD.cpp installtest
+        cp quantlib-xad/Examples/AdjointSwap/AdjointSwapXAD.cpp installtest
         cd installtest
         echo "cmake_minimum_required(VERSION 3.15.2)" > CMakeLists.txt
         echo "project(QlTest LANGUAGES CXX)" >> CMakeLists.txt
@@ -276,7 +276,7 @@ jobs:
       if: ${{ matrix.disable_aad == 'OFF' }}
       run: |
         mkdir installtest
-        cp qlxad/Examples/AdjointSwap/AdjointSwapXAD.cpp installtest
+        cp quantlib-xad/Examples/AdjointSwap/AdjointSwapXAD.cpp installtest
         cd installtest
         echo "cmake_minimum_required(VERSION 3.15.2)" > CMakeLists.txt
         echo "project(QlTest LANGUAGES CXX)" >> CMakeLists.txt
