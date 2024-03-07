@@ -30,6 +30,7 @@ target_include_directories(quantlib-xad INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
     $<INSTALL_INTERFACE:${QL_INSTALL_INCLUDEDIR}>
 )
+target_compile_features(quantlib-xad INTERFACE cxx_std_14)
 if(NOT QLXAD_DISABLE_AAD)
     target_compile_definitions(quantlib-xad INTERFACE QL_INCLUDE_FIRST=ql/qlxad.hpp)
 else()

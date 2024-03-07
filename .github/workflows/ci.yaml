@@ -201,6 +201,7 @@ jobs:
         echo find_package(QuantLibXad REQUIRED) >> CMakeLists.txt
         echo add_executable(AdjointSwapXAD AdjointSwapXAD.cpp) >> CMakeLists.txt
         echo target_link_libraries(AdjointSwapXAD PRIVATE QuantLib::QuantLib) >> CMakeLists.txt
+        echo set_target_properties(AdjointSwapXAD PROPERTIES MSVC_RUNTIME_LIBRARY MultiThreaded) >> CMakeLists.txt
         mkdir build
         cd build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
