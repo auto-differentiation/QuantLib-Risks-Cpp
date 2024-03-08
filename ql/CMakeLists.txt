@@ -5,7 +5,7 @@
 #  QuantLib. XAD is a fast and comprehensive C++ library for
 #  automatic differentiation.
 #
-#  Copyright (C) 2010-2023 Xcelerit Computing Ltd.
+#  Copyright (C) 2010-2024 Xcelerit Computing Ltd.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as published
@@ -30,6 +30,7 @@ target_include_directories(quantlib-xad INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
     $<INSTALL_INTERFACE:${QL_INSTALL_INCLUDEDIR}>
 )
+target_compile_features(quantlib-xad INTERFACE cxx_std_14)
 if(NOT QLXAD_DISABLE_AAD)
     target_compile_definitions(quantlib-xad INTERFACE QL_INCLUDE_FIRST=ql/qlxad.hpp)
 else()
@@ -40,38 +41,37 @@ if(MSVC)
 endif()
 target_link_libraries(quantlib-xad INTERFACE XAD::xad)
 set_target_properties(quantlib-xad PROPERTIES
-    EXPORT_NAME ${PACKAGE_NAME}
+    EXPORT_NAME QuantLibXad
 )
-install(TARGETS quantlib-xad EXPORT QlXadTargets)
+install(TARGETS quantlib-xad EXPORT QuantLibTargets)
 foreach(file ${QLXAD_HEADERS})
     install(FILES ${file} DESTINATION "${QL_INSTALL_INCLUDEDIR}/ql")
 endforeach()
 
-# Install config scripts and targets
+
+# Install a convenience config script for QuantLibXad, which allows users to
+# 
+# find_package(QuantLibXad REQUIRED)
+# target_link_libraries(myapp PRIVATE QuantLib::QuantLib)
+#
+# That is, it looks for the XAD dependency before it includes the QuantLibConfig file
+#
+# Without that, users have to first find_package(XAD) before find_package(QuantLib)
+# to achieve the same.
+#
+
+set(QLXAD_INSTALL_CMAKEDIR "lib/cmake/QuantLibXad" CACHE STRING
+    "Installation directory for CMake scripts for QuantLib XAD")
+
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/../cmake/QlXadConfigVersion.cmake"
-    VERSION ${QL_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-export(EXPORT QlXadTargets
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/../cmake/QlXadTargets.cmake"
-    NAMESPACE QuantLib::
-)
-configure_file("../cmake/QlXadConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/../cmake/QlXadConfig.cmake"
+configure_file("../cmake/QuantLibXadConfig.cmake.in"
+    "${PROJECT_BINARY_DIR}/cmake/QuantLibXadConfig.cmake"
     COPYONLY
 )
-configure_package_config_file("../cmake/QlXadConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/../cmake/QlXadConfig.cmake"
-    INSTALL_DESTINATION "${QL_INSTALL_CMAKEDIR}"
+configure_package_config_file("../cmake/QuantLibXadConfig.cmake.in"
+    "${PROJECT_BINARY_DIR}/cmake/QuantLibXadConfig.cmake"
+    INSTALL_DESTINATION "${QLXAD_INSTALL_CMAKEDIR}"
 )
-install(EXPORT QlXadTargets
-    FILE QlXadTargets.cmake
-    NAMESPACE QuantLib::
-    DESTINATION "${QL_INSTALL_CMAKEDIR}"
-)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/../cmake/QlXadConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/../cmake/QlXadConfigVersion.cmake"
-    DESTINATION "${QL_INSTALL_CMAKEDIR}"
+install(FILES "${PROJECT_BINARY_DIR}/cmake/QuantLibXadConfig.cmake"
+    DESTINATION "${QLXAD_INSTALL_CMAKEDIR}"
 )
