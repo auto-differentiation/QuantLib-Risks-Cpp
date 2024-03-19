@@ -44,7 +44,7 @@ accepted:
 
 ## Source Code Organisation
 
--   [cmake](cmake): CMake modules and scripts used for the build
+-   [cmake](https://cmake.org): CMake modules and scripts used for the build
 -   [ql](ql): Files to be added to the QuantLib build
 -   [Examples](Examples): QuantLib examples with adjoints, using xad
 -   [test-suite](test-suite): Unit tests suite, mimicking QuantLib's, incl. adjoint calculations

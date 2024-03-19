@@ -5,6 +5,8 @@ XAD, which can be used in addition to the existing `CMakePresets.json` file
 that already ships with QuantLib to add additional presets for Quantlib-XAD.
 (A `CMakeUserPresets.json` can be placed beside the existing `CMakePresets.json` for user-specific local settings and is typically not checked in to Git).
 
+**Note:** If you're using QuantLib 1.31 or earlier, please use the [CMakeUserPresets-1.31.json](./CMakeUserPresets-1.31.json) file. For later versions, [CMakeUserPresets.json](./CMakeUserPresets.json) should be used.
+
 It provides the following extra configure presets for Windows / Visual Studio 
 (all using the Ninja builder for using the built-in CMake support with "Open Folder"):
 
@@ -29,6 +31,11 @@ And the following presets for Linux (both for Make and Ninja builders):
 - `linux-xad-gcc-ninja-debug`
 - `linux-xad-gcc-ninja-release`
 - `linux-xad-gcc-ninja-relwithdebinfo`
+
+Additionally, for each of the presets listed above, there is a `*-noxad-*` version
+provided as well. This sets `QLXAD_DISABLE_ADD` to `ON`, reverting to the standard `double`
+for QuantLib's Real but compiling the examples within the `quantlib-xad` repository.
+This enabled benchmarking / comparisons of the same examples with XAD disabled.
 
 ## Usage
 

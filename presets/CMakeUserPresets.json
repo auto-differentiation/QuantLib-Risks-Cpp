@@ -1,0 +1,201 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "_xad-base",
+            "hidden": true,
+            "cacheVariables": {
+                "QL_EXTERNAL_SUBDIRECTORIES":"${sourceDir}/../XAD;${sourceDir}/../quantlib-xad",
+                "QL_EXTRA_LINK_LIBRARIES": "quantlib-xad",
+                "QL_NULL_AS_FUNCTIONS": "ON",
+                "XAD_STATIC_MSVC_RUNTIME": "ON",
+                "XAD_NO_THREADLOCAL": "ON"
+            }
+        },
+        {
+            "name": "_xad",
+            "hidden": true,
+            "inherits": "_xad-base",
+            "cacheVariables": {
+                "QLXAD_DISABLE_AAD": "OFF"
+            }
+        },
+        {
+            "name": "_noxad",
+            "hidden": true,
+            "inherits": "_xad-base",
+            "cacheVariables": {
+                "QLXAD_DISABLE_AAD": "OFF"
+            }
+        },
+        {
+            "name": "linux-xad-clang-debug",
+            "inherits": ["linux-clang-debug", "_xad"]
+        },
+        {
+            "name": "linux-xad-clang-release",
+            "inherits": ["linux-clang-release", "_xad"]
+        },
+        {
+            "name": "linux-xad-clang-relwithdebinfo",
+            "inherits": ["linux-clang-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "linux-xad-gcc-debug",
+            "inherits": ["linux-gcc-debug", "_xad"]
+        },
+        {
+            "name": "linux-xad-gcc-release",
+            "inherits": ["linux-gcc-release", "_xad"]
+        },
+        {
+            "name": "linux-xad-gcc-relwithdebinfo",
+            "inherits": ["linux-gcc-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "linux-xad-clang-ninja-debug",
+            "inherits": ["linux-clang-ninja-debug", "_xad"]
+        },
+        {
+            "name": "linux-xad-clang-ninja-release",
+            "inherits": ["linux-clang-ninja-release", "_xad"]
+        },
+        {
+            "name": "linux-xad-clang-ninja-relwithdebinfo",
+            "inherits": ["linux-clang-ninja-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "linux-xad-gcc-ninja-debug",
+            "inherits": ["linux-gcc-ninja-debug", "_xad"]
+        },
+        {
+            "name": "linux-xad-gcc-ninja-release",
+            "inherits": ["linux-gcc-ninja-release", "_xad"]
+        },
+        {
+            "name": "linux-xad-gcc-ninja-relwithdebinfo",
+            "inherits": ["linux-gcc-ninja-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "windows-xad-clang-release",
+            "inherits": ["windows-clang-reelase", "_xad"]
+        },
+        {
+            "name": "windows-xad-clang-debug",
+            "inherits": ["windows-clang-debug", "_xad"]
+        },
+        {
+            "name": "windows-xad-clang-relwithdebinfo",
+            "inherits": ["windows-clang-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "windows-xad-msvc-release",
+            "inherits": ["windows-msvc-reelase", "_xad"]
+        },
+        {
+            "name": "windows-xad-msvc-debug",
+            "inherits": ["windows-msvc-debug", "_xad"]
+        },
+        {
+            "name": "windows-xad-msvc-relwithdebinfo",
+            "inherits": ["windows-msvc-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "apple-arm64-xad-ninja-debug",
+            "inherits": ["apple-arm64-ninja-debug", "_xad"]
+        },
+        {
+            "name": "apple-arm64-xad-ninja-release",
+            "inherits": ["apple-arm64-ninja-release", "_xad"]
+        },
+        {
+            "name": "apple-arm64-xad-ninja-relwithdebinfo",
+            "inherits": ["apple-arm64-ninja-relwithdebinfo", "_xad"]
+        },
+        {
+            "name": "linux-noxad-clang-debug",
+            "inherits": ["linux-clang-debug", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-clang-release",
+            "inherits": ["linux-clang-release", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-clang-relwithdebinfo",
+            "inherits": ["linux-clang-relwithdebinfo", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-gcc-debug",
+            "inherits": ["linux-gcc-debug", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-gcc-release",
+            "inherits": ["linux-gcc-release", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-gcc-relwithdebinfo",
+            "inherits": ["linux-gcc-relwithdebinfo", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-clang-ninja-debug",
+            "inherits": ["linux-clang-ninja-debug", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-clang-ninja-release",
+            "inherits": ["linux-clang-ninja-release", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-clang-ninja-relwithdebinfo",
+            "inherits": ["linux-clang-ninja-relwithdebinfo", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-gcc-ninja-debug",
+            "inherits": ["linux-gcc-ninja-debug", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-gcc-ninja-release",
+            "inherits": ["linux-gcc-ninja-release", "_noxad"]
+        },
+        {
+            "name": "linux-noxad-gcc-ninja-relwithdebinfo",
+            "inherits": ["linux-gcc-ninja-relwithdebinfo", "_noxad"]
+        },
+        {
+            "name": "windows-noxad-clang-release",
+            "inherits": ["windows-clang-reelase", "_noxad"]
+        },
+        {
+            "name": "windows-noxad-clang-debug",
+            "inherits": ["windows-clang-debug", "_noxad"]
+        },
+        {
+            "name": "windows-noxad-clang-relwithdebinfo",
+            "inherits": ["windows-clang-relwithdebinfo", "_noxad"]
+        },
+        {
+            "name": "windows-noxad-msvc-release",
+            "inherits": ["windows-msvc-reelase", "_noxad"]
+        },
+        {
+            "name": "windows-noxad-msvc-debug",
+            "inherits": ["windows-msvc-debug", "_noxad"]
+        },
+        {
+            "name": "windows-noxad-msvc-relwithdebinfo",
+            "inherits": ["windows-msvc-relwithdebinfo", "_noxad"]
+        },
+        {
+            "name": "apple-arm64-noxad-ninja-debug",
+            "inherits": ["apple-arm64-ninja-debug", "_noxad"]
+        },
+        {
+            "name": "apple-arm64-noxad-ninja-release",
+            "inherits": ["apple-arm64-ninja-release", "_noxad"]
+        },
+        {
+            "name": "apple-arm64-noxad-ninja-relwithdebinfo",
+            "inherits": ["apple-arm64-ninja-relwithdebinfo", "_noxad"]
+        }
+
+    ]
+}
