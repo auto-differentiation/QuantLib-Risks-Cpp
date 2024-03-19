@@ -78,7 +78,7 @@
         },
         {
             "name": "windows-xad-clang-release",
-            "inherits": ["windows-clang-reelase", "_xad"]
+            "inherits": ["windows-clang-release", "_xad"]
         },
         {
             "name": "windows-xad-clang-debug",
@@ -90,7 +90,7 @@
         },
         {
             "name": "windows-xad-msvc-release",
-            "inherits": ["windows-msvc-reelase", "_xad"]
+            "inherits": ["windows-msvc-release", "_xad"]
         },
         {
             "name": "windows-xad-msvc-debug",
@@ -162,7 +162,7 @@
         },
         {
             "name": "windows-noxad-clang-release",
-            "inherits": ["windows-clang-reelase", "_noxad"]
+            "inherits": ["windows-clang-release", "_noxad"]
         },
         {
             "name": "windows-noxad-clang-debug",
@@ -174,7 +174,7 @@
         },
         {
             "name": "windows-noxad-msvc-release",
-            "inherits": ["windows-msvc-reelase", "_noxad"]
+            "inherits": ["windows-msvc-release", "_noxad"]
         },
         {
             "name": "windows-noxad-msvc-debug",
@@ -196,6 +196,5 @@
             "name": "apple-arm64-noxad-ninja-relwithdebinfo",
             "inherits": ["apple-arm64-ninja-relwithdebinfo", "_noxad"]
         }
-
     ]
 }
