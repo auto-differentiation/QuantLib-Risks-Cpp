@@ -25,7 +25,7 @@
             "hidden": true,
             "inherits": "_xad-base",
             "cacheVariables": {
-                "QLXAD_DISABLE_AAD": "OFF"
+                "QLXAD_DISABLE_AAD": "ON"
             }
         },
         {
