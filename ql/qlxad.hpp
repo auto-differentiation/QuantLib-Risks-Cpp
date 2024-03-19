@@ -40,6 +40,7 @@
 #include <type_traits>
 
 #define QL_REAL xad::AReal<double>
+#define QL_XAD 1
 
 // QuantLib specialisations to work with expressions
 namespace QuantLib {

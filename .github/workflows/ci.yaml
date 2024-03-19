@@ -30,7 +30,7 @@ on:
 env:
   ql_repo: ${{ github.event.inputs.ql_repo || 'lballabio/QuantLib' }}
   ql_branch: ${{ github.event.inputs.ql_branch || 'master' }}
-  xad_repo: ${{ github.event.inputs.xad_repo || 'xcelerit/XAD' }}
+  xad_repo: ${{ github.event.inputs.xad_repo || 'auto-differentiation/XAD' }}
   xad_branch: ${{ github.event.inputs.xad_branch || 'main' }}
 jobs:
 
