@@ -14,7 +14,7 @@ Note that we follow QuantLib's releases in this repository, with matching versio
 -   Fixed missing includes in some samples
 
 
-## [1.33]
+## [1.33] - 2024-03-19
 
 Release compatible with [QuantLib v1.33](https://github.com/lballabio/QuantLib/releases/tag/QuantLib-v1.33).
 

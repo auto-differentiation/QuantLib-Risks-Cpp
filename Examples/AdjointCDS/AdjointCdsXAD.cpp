@@ -3,7 +3,7 @@
 /*!
  Copyright (C) 2008 Jose Aparicio
  Copyright (C) 2014 Peter Caspers
- Copyright (C) 2023 Xcelerit Computing Limited
+ Copyright (C) 2023, 2024 Xcelerit Computing Limited
 
  This file is part of QuantLib / XAD integration module.
  It is modified from QuantLib, a free-software/open-source library

@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2005, 2006, 2007, 2009 StatPro Italia srl
- Copyright (C) 2023 Xcelerit Computing Limited
+ Copyright (C) 2023, 2024 Xcelerit Computing Limited
 
  This file is part of QuantLib / XAD integration module.
  It is modified from QuantLib, a free-software/open-source library
