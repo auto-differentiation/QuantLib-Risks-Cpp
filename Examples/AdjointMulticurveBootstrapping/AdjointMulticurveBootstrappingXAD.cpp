@@ -56,7 +56,7 @@ either with XAD or with plain doubles and bumping (when QLXAD_DISABLE_AAD is ON)
 using namespace QuantLib;
 
 
-Real priceMulricurveBootstrappingSwap(const std::vector<Real>& depos,
+Real priceMulticurveBootstrappingSwap(const std::vector<Real>& depos,
                                       const Calendar& calendar,
                                       const std::vector<Real>& shortOis,
                                       const std::vector<Real>& datesOIS,
@@ -306,7 +306,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     tape.registerInput(d6MRate);
     tape.newRecording();
 
-    Real value = priceMulricurveBootstrappingSwap(
+    Real value = priceMulticurveBootstrappingSwap(
         depos_t, calendar, shortOis_t, datesOIS_t, longTermOIS_t, todaysDate,
         termStructureDayCounter, d6MRate, fra_t, swapRates_t, settlementDate, maturity, nominal,
         fixedRate, spread, lengthInYears);
@@ -364,7 +364,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
                     Real spread,
                     Integer lengthInYears,
                     std::vector<Real>& gradient) {
-    Real value = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+    Real value = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                                   todaysDate, termStructureDayCounter, d6MRate, fra,
                                                   swapRates, settlementDate, maturity, nominal,
                                                   fixedRate, spread, lengthInYears);
@@ -374,7 +374,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     auto depos_t = depos;
     for (std::size_t i = 0; i < depos.size(); ++i) {
         depos_t[i] += eps;
-        Real v1 = priceMulricurveBootstrappingSwap(
+        Real v1 = priceMulticurveBootstrappingSwap(
             depos_t, calendar, shortOis, datesOIS, longTermOIS, todaysDate, termStructureDayCounter,
             d6MRate, fra, swapRates, settlementDate, maturity, nominal, fixedRate, spread,
             lengthInYears);
@@ -385,7 +385,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     auto shortOis_t = shortOis;
     for (std::size_t i = 0; i < shortOis.size(); ++i) {
         shortOis_t[i] += eps;
-        Real v1 = priceMulricurveBootstrappingSwap(
+        Real v1 = priceMulticurveBootstrappingSwap(
             depos, calendar, shortOis_t, datesOIS, longTermOIS, todaysDate, termStructureDayCounter,
             d6MRate, fra, swapRates, settlementDate, maturity, nominal, fixedRate, spread,
             lengthInYears);
@@ -396,7 +396,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     auto datesOIS_t = datesOIS;
     for (std::size_t i = 0; i < datesOIS.size(); ++i) {
         datesOIS_t[i] += eps;
-        Real v1 = priceMulricurveBootstrappingSwap(
+        Real v1 = priceMulticurveBootstrappingSwap(
             depos, calendar, shortOis, datesOIS_t, longTermOIS, todaysDate, termStructureDayCounter,
             d6MRate, fra, swapRates, settlementDate, maturity, nominal, fixedRate, spread,
             lengthInYears);
@@ -407,7 +407,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     auto longTermOIS_t = longTermOIS;
     for (std::size_t i = 0; i < longTermOIS.size(); ++i) {
         longTermOIS_t[i] += eps;
-        Real v1 = priceMulricurveBootstrappingSwap(
+        Real v1 = priceMulticurveBootstrappingSwap(
             depos, calendar, shortOis, datesOIS, longTermOIS_t, todaysDate, termStructureDayCounter,
             d6MRate, fra, swapRates, settlementDate, maturity, nominal, fixedRate, spread,
             lengthInYears);
@@ -418,7 +418,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     auto swapRates_t = swapRates;
     for (std::size_t i = 0; i < swapRates.size(); ++i) {
         swapRates_t[i] += eps;
-        Real v1 = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+        Real v1 = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                                    todaysDate, termStructureDayCounter, d6MRate,
                                                    fra, swapRates_t, settlementDate, maturity,
                                                    nominal, fixedRate, spread, lengthInYears);
@@ -429,7 +429,7 @@ Real priceWithSensi(const std::vector<Real>& depos,
     auto fra_t = fra;
     for (std::size_t i = 0; i < fra.size(); ++i) {
         fra_t[i] += eps;
-        Real v1 = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+        Real v1 = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                                    todaysDate, termStructureDayCounter, d6MRate,
                                                    fra_t, swapRates, settlementDate, maturity,
                                                    nominal, fixedRate, spread, lengthInYears);
@@ -437,25 +437,25 @@ Real priceWithSensi(const std::vector<Real>& depos,
         fra_t[i] -= eps;
     }
 
-    Real v1 = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+    Real v1 = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                                todaysDate, termStructureDayCounter, d6MRate, fra,
                                                swapRates, settlementDate, maturity, nominal,
                                                fixedRate + eps, spread, lengthInYears);
     gradient.push_back((v1 - value) / eps);
 
-    v1 = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+    v1 = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                           todaysDate, termStructureDayCounter, d6MRate, fra,
                                           swapRates, settlementDate, maturity, nominal, fixedRate,
                                           spread + eps, lengthInYears);
     gradient.push_back((v1 - value) / eps);
 
-    v1 = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+    v1 = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                           todaysDate, termStructureDayCounter, d6MRate, fra,
                                           swapRates, settlementDate, maturity, nominal + eps,
                                           fixedRate, spread, lengthInYears);
     gradient.push_back((v1 - value) / eps);
 
-    v1 = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+    v1 = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                           todaysDate, termStructureDayCounter, d6MRate + eps, fra,
                                           swapRates, settlementDate, maturity, nominal, fixedRate,
                                           spread, lengthInYears);
@@ -558,7 +558,7 @@ int main(int, char*[]) {
         Real v = 0.0;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < N; ++i) {
-            v = priceMulricurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
+            v = priceMulticurveBootstrappingSwap(depos, calendar, shortOis, datesOIS, longTermOIS,
                                                  todaysDate, termStructureDayCounter, d6MRate, fra,
                                                  swapRates, settlementDate, maturity, nominal,
                                                  fixedRate, spread, lengthInYears);
