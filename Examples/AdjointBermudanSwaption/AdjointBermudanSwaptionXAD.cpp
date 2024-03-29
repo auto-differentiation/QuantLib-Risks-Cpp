@@ -4,7 +4,7 @@
  Copyright (C) 2002, 2003 Sadruddin Rejeb
  Copyright (C) 2004 Ferdinando Ametrano
  Copyright (C) 2005, 2006, 2007 StatPro Italia srl
- Copyright (C) 2023 Xcelerit Computing Limited
+ Copyright (C) 2023, 2024 Xcelerit Computing Limited
 
  This file is part of QuantLib / XAD integration module.
  It is modified from QuantLib, a free-software/open-source library
@@ -35,6 +35,7 @@ TODO: Use the implicit function theorem for calibration with AAD.
 #include <ql/cashflows/coupon.hpp>
 #include <ql/indexes/ibor/euribor.hpp>
 #include <ql/instruments/swaption.hpp>
+#include <ql/instruments/vanillaswap.hpp>
 #include <ql/math/optimization/levenbergmarquardt.hpp>
 #include <ql/models/shortrate/calibrationhelpers/swaptionhelper.hpp>
 #include <ql/models/shortrate/onefactormodels/blackkarasinski.hpp>
