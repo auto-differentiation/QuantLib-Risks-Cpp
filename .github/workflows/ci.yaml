@@ -41,17 +41,17 @@ jobs:
         disable_aad: ["ON", "OFF"]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: ${{ env.ql_repo }}
         ref: ${{ env.ql_branch }}
         path: QuantLib
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
         path: XAD
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: quantlib-xad
     - name: Setup
@@ -59,7 +59,7 @@ jobs:
         sudo apt update
         sudo apt install -y libboost-dev ccache ninja-build
     - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2.5
+      uses: hendrikmuhs/ccache-action@v1.2.12
       with:
         key: linux-${{ matrix.disable_aad }}
         max-size: 650M
@@ -142,7 +142,7 @@ jobs:
       with:
         path: quantlib-xad
     - name: sccache
-      uses: hendrikmuhs/ccache-action@v1.2.5
+      uses: hendrikmuhs/ccache-action@v1.2.12
       with:
         key: windows-${{ matrix.disable_aad }}
         variant: sccache
@@ -219,17 +219,17 @@ jobs:
     env:
       CXXFLAGS: -stdlib=libc++ -mmacosx-version-min=10.9
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: ${{ env.ql_repo }}
         ref: ${{ env.ql_branch }}
         path: QuantLib
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
         path: XAD
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: quantlib-xad
     - name: Setup
@@ -238,7 +238,7 @@ jobs:
         brew install ninja
         brew install ccache
     - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2.5
+      uses: hendrikmuhs/ccache-action@v1.2.12
       with:
         key: macos-${{ matrix.disable_aad }}
         max-size: 650M
@@ -297,17 +297,17 @@ jobs:
   xad-linux-std-classes:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: ${{ env.ql_repo }}
         ref: ${{ env.ql_branch }}
         path: QuantLib
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
         path: XAD
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: quantlib-xad
     - name: Setup
@@ -315,7 +315,7 @@ jobs:
         sudo apt update
         sudo apt install -y libboost-dev ccache ninja-build
     - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2.5
+      uses: hendrikmuhs/ccache-action@v1.2.12
       with:
         key: linux-std-classes
         max-size: 650M
