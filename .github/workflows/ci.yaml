@@ -20,7 +20,7 @@ on:
       xad_repo:
         description: XAD repository in <owner>/<repo> format
         required: true
-        default: xcelerit/XAD
+        default: auto-differentiation/xad
       xad_branch:
         description: Branch or tag for XAD repository
         required: true
@@ -30,7 +30,7 @@ on:
 env:
   ql_repo: ${{ github.event.inputs.ql_repo || 'lballabio/QuantLib' }}
   ql_branch: ${{ github.event.inputs.ql_branch || 'master' }}
-  xad_repo: ${{ github.event.inputs.xad_repo || 'auto-differentiation/XAD' }}
+  xad_repo: ${{ github.event.inputs.xad_repo || 'auto-differentiation/xad' }}
   xad_branch: ${{ github.event.inputs.xad_branch || 'main' }}
 jobs:
 
@@ -50,7 +50,7 @@ jobs:
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
-        path: XAD
+        path: xad
     - uses: actions/checkout@v4
       with:
         path: QuantLib-Risks-Cpp
