@@ -5,7 +5,7 @@
             "name": "_xad-base",
             "hidden": true,
             "cacheVariables": {
-                "QL_EXTERNAL_SUBDIRECTORIES":"${sourceDir}/../XAD;${sourceDir}/../QuantLib-Risks-Cpp",
+                "QL_EXTERNAL_SUBDIRECTORIES":"${sourceDir}/../xad;${sourceDir}/../QuantLib-Risks-Cpp",
                 "QL_EXTRA_LINK_LIBRARIES": "QuantLib-Risks",
                 "QL_NULL_AS_FUNCTIONS": "ON",
                 "XAD_STATIC_MSVC_RUNTIME": "ON",

@@ -15,7 +15,7 @@ git clone https://github.com/yourusername/QuantLib-Risks-Cpp.git
 3.  Create a feature branch, typically based on main, for your change
 
 ```bash
-git checkout -b feature/my-change main
+git checkout -b feature/my-changed-main
 ```
 
 4.  Make your changes, adding tests as you go, and commit. Again, make sure all 
