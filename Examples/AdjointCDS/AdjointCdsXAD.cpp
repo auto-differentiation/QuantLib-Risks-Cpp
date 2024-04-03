@@ -81,7 +81,7 @@ Real priceCDS(const std::vector<Real>& hazardRates,
 }
 
 // Sensitivities with XAD
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;
@@ -177,7 +177,7 @@ int main() {
             dates.push_back(today + tn[i]);
         }
 
-#ifdef QLXAD_DISABLE_AAD
+#ifdef QLRISKS_DISABLE_AAD
         std::cout << "Pricing a CDS without sensitivities...\n";
         Real v = priceCDS(hazardRates, dates, riskFreeRate, issueDate, maturity, recoveryRate,
                           fixedRate, calendar, dayCount, notional);

@@ -1,7 +1,7 @@
 ##############################################################################
 #   
 #
-#  This file is part of quantlib-xad, an adaptor module to enable using XAD with
+#  This file is part of QuantLib-Risks, an adaptor module to enable using XAD with
 #  QuantLib. XAD is a fast and comprehensive C++ library for
 #  automatic differentiation.
 #
@@ -22,14 +22,14 @@
 #   
 ##############################################################################
 
-option(QLXAD_DISABLE_AAD "Disable using XAD for QuantLib's Real, allowing to run samples with double" OFF)
+option(QLRISKS_DISABLE_AAD "Disable using XAD for QuantLib's Real, allowing to run samples with double" OFF)
 
 add_subdirectory(ql)
 if(MSVC)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 add_subdirectory(Examples)
-if(NOT QLXAD_DISABLE_AAD)
+if(NOT QLRISKS_DISABLE_AAD)
     # the test suite is not supporting double
 	add_subdirectory(test-suite)
 endif()

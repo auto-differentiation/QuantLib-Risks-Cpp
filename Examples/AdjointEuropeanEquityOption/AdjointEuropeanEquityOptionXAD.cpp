@@ -21,7 +21,7 @@
 
 /*
 This example shows how to price a portfolio of European equity options with
-sensitivities computed via XAD (or bumping if QLXAD_DISABLE_AAD is ON).
+sensitivities computed via XAD (or bumping if QLRISKS_DISABLE_AAD is ON).
 It measures performance and reports the times.
 
 This sample is used to validate XAD performance with an analytic engine.
@@ -107,7 +107,7 @@ Real priceEuropean(const std::vector<Date>& dates,
 }
 
 // price with XAD sensitivities
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;

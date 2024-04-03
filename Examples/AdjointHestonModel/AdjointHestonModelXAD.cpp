@@ -162,7 +162,7 @@ Real priceHestonModel(ext::shared_ptr<QuantLib::HestonModel>& model,
 }
 
 // price with sensitivities
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;
@@ -285,7 +285,7 @@ int main() {
 
         std::cout.precision(6);
 
-#ifdef QLXAD_DISABLE_AAD
+#ifdef QLRISKS_DISABLE_AAD
         std::cout << "Pricing with Heston COS engine, no sensitivities...\n";
         auto model = HestonModelCalibration(dates, rates, dividendYield, dayCounter, calendar, t, v,
                                             strike, s0, settlementDate);

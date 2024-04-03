@@ -169,7 +169,7 @@ Real priceSwaption(const std::vector<Integer>& swapLengths,
 
 
 // Sensitivities with XAD
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;
@@ -236,7 +236,7 @@ int main(int, char*[]) {
             0.1040, 0.1149, 0.1112, 0.1070, 0.1010, 0.0957, 0.1047, 0.1021, 0.0980,
             0.0951, 0.1270, 0.1000, 0.0950, 0.0900, 0.1230, 0.1160};
 
-#ifdef QLXAD_DISABLE_AAD
+#ifdef QLRISKS_DISABLE_AAD
         std::cout << "Pricing Bermudan swaption without sensitivities...\n";
         Real price = priceSwaption(swapLengths, swaptionVols, numRows, numCols, flatRate);
         std::cout << "Price = " << price << std::endl;

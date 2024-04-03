@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-   This file is part of quantlib-xad, an adaptor module to enable using XAD with
+   This file is part of QuantLib-Risks, an adaptor module to enable using XAD with
    QuantLib. XAD is a fast and comprehensive C++ library for
    automatic differentiation.
 
@@ -40,7 +40,7 @@
 #include <type_traits>
 
 #define QL_REAL xad::AReal<double>
-#define QL_XAD 1
+#define QL_RISKS 1
 
 // QuantLib specialisations to work with expressions
 namespace QuantLib {
