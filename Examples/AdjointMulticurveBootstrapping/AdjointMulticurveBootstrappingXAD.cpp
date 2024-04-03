@@ -27,7 +27,7 @@ This example demonstrates how to use XAD to calculate sensitivities to
 market quotes when multi-curve bootstrapping is used from many input
 quotes.
 It also measures the performance for calculating sensitivities,
-either with XAD or with plain doubles and bumping (when QLXAD_DISABLE_AAD is ON).
+either with XAD or with plain doubles and bumping (when QLRISKS_DISABLE_AAD is ON).
 */
 
 #include <ql/qldefines.hpp>
@@ -260,7 +260,7 @@ Real priceMulticurveBootstrappingSwap(const std::vector<Real>& depos,
     return spot5YearSwap.NPV();
 }
 
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;

@@ -79,7 +79,7 @@ Real priceAmerican(Rate riskFreeRate, const Calendar &calendar,
 
 
 // Sensitivities with XAD
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;
@@ -158,7 +158,7 @@ int main()
 
         std::cout.precision(10);
 
-#ifdef QLXAD_DISABLE_AAD
+#ifdef QLRISKS_DISABLE_AAD
         std::cout << "Pricing American equity option (without sensitivities)...\n";
         Real v = priceAmerican(riskFreeRate, calendar, maturity, strike,
                     settlementDate, dayCounter, volatility, todaysDate,

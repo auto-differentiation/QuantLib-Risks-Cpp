@@ -22,7 +22,7 @@
 /*
 This example is an AAD-enabled version for the Replication sample that ships with
 QuantLib. It calculates sensitivities using XAD and measures peformance.
-When QLXAD_DISABLE_AAD is ON, it calculates the sensitivities using finite differences.
+When QLRISKS_DISABLE_AAD is ON, it calculates the sensitivities using finite differences.
 */
 
 #include <ql/qldefines.hpp>
@@ -163,7 +163,7 @@ Real pricePortfolio(const std::vector<Date>& dates,
 }
 
 
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;

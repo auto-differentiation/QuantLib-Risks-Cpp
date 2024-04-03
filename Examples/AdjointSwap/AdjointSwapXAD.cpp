@@ -22,7 +22,7 @@
 This example shows how to calculate sensitivities to market quotes for
 pricing a portfolio of swaps using XAD.
 It also measures the performance for calculating sensitivities,
-either with XAD or with plain doubles and bumping (when QLXAD_DISABLE_AAD is ON).
+either with XAD or with plain doubles and bumping (when QLRISKS_DISABLE_AAD is ON).
 */
 
 
@@ -192,7 +192,7 @@ Real pricePlain(const std::vector<double>& marketQuotes, Size portfolioSize, Siz
     return v;
 }
 
-#ifndef QLXAD_DISABLE_AAD
+#ifndef QLRISKS_DISABLE_AAD
 
 // create tape
 using tape_type = Real::tape_type;
