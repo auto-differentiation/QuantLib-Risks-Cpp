@@ -10,7 +10,7 @@
 </p>
 
 As a demonstrator of integration of the [XAD automatic differentiation tool](https://auto-differentiation.github.io) with real-world code, 
-the latest release of QuantLib is AAD-enabled with XAD. 
+the latest release of QuantLib can calculate risks with the help of XAD. 
 The performance achieved on sample applications is many-fold superior to what has been reported previously with other tools. 
 This demonstrates production quality use of the XAD library in a code-base of several hundred thousand lines.
 
@@ -20,7 +20,7 @@ It is not usable stand-alone.
 
 ## Getting Started
 
-For detailed build instructions with [XAD](https://auto-differentiation.github.io) and [QuantLib](https://www.quantlib.org), please refer to the [XAD documentation site](https://auto-differentiation.github.io/quantlib/).
+For detailed build instructions with [XAD](https://auto-differentiation.github.io) and [QuantLib](https://www.quantlib.org), please refer to the [XAD documentation site](https://auto-differentiation.github.io/quantlib-risks/cxx/).
 
 ## Getting Help
 
@@ -33,6 +33,11 @@ For general questions about XAD, sharing ideas, engaging with community members,
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for the process of contributing to this project.
 Please also obey our [Code of Conduct](CODE_OF_CONDUCT.md) in all communication.
+
+## Related Projects
+
+- XAD Comprehensive automatic differentiation in [Python](https://github.com/auto-differentiation/xad-py) and [C++](https://github.com/auto-differentiation/xad)
+- QuantLib-Risks: Fast risk evaluations in [Python](https://github.com/auto-differentiation/QuantLib-Risks-Py) and [C++](https://github.com/auto-differentiation/QuantLib-Risks-Cpp)
 
 ## Planned Features
 
