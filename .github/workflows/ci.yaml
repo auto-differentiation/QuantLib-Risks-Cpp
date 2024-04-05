@@ -73,7 +73,7 @@ jobs:
           -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/QuantLib-Risks-Cpp" \
+          -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" \
           -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks \
           -DQL_NULL_AS_FUNCTIONS=ON \
           -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
@@ -137,7 +137,7 @@ jobs:
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
-        path: XAD
+        path: xad
     - uses: actions/checkout@v3
       with:
         path: QuantLib-Risks-Cpp
@@ -162,7 +162,7 @@ jobs:
         mkdir build
         cd build
         call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
-        cmake .. -G Ninja -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/QuantLib-Risks-Cpp" -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
+        cmake .. -G Ninja -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
     - name: Build
       shell: cmd
       run: |
@@ -228,7 +228,7 @@ jobs:
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
-        path: XAD
+        path: xad
     - uses: actions/checkout@v4
       with:
         path: QuantLib-Risks-Cpp
@@ -251,7 +251,7 @@ jobs:
           -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/QuantLib-Risks-Cpp" \
+          -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" \
           -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks \
           -DQL_NULL_AS_FUNCTIONS=ON \
           -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
@@ -306,7 +306,7 @@ jobs:
       with:
         repository: ${{ env.xad_repo }}
         ref: ${{ env.xad_branch }}
-        path: XAD
+        path: xad
     - uses: actions/checkout@v4
       with:
         path: QuantLib-Risks-Cpp
@@ -324,7 +324,7 @@ jobs:
         cd QuantLib
         mkdir build
         cd build
-        cmake -G Ninja -DBOOST_ROOT=/usr -DQL_USE_STD_CLASSES=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/XAD;${{ github.workspace }}/QuantLib-Risks-Cpp" -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks -DQL_NULL_AS_FUNCTIONS=ON ..
+        cmake -G Ninja -DBOOST_ROOT=/usr -DQL_USE_STD_CLASSES=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks -DQL_NULL_AS_FUNCTIONS=ON ..
     - name: Compile
       run: |
         cd QuantLib/build
