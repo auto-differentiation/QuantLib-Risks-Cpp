@@ -215,7 +215,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
-    runs-on: macos-latest
+    runs-on: macos-13
     env:
       CXXFLAGS: -stdlib=libc++ -mmacosx-version-min=10.9
     steps:
