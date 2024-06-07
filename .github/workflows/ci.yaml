@@ -161,26 +161,26 @@ jobs:
         cd QuantLib
         mkdir build
         cd build
-        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        call "${{ env.vsvarsall }}" amd64
         cmake .. -G Ninja -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_BUILD_TYPE=Release -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks -DQL_NULL_AS_FUNCTIONS=ON -DXAD_STATIC_MSVC_RUNTIME=ON -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
     - name: Build
       shell: cmd
       run: |
         cd QuantLib\build
-        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        call "${{ env.vsvarsall }}" amd64
         cmake --build .
     - name: Test QuantLib
       shell: cmd
       run: |
         cd QuantLib\build
-        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        call "${{ env.vsvarsall }}" amd64
         .\test-suite\quantlib-test-suite --log_level=message
     - name: Test QuantLib-Risks
       if: ${{ matrix.disable_aad == 'OFF' }}
       shell: cmd
       run: |
         cd QuantLib\build
-        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        call "${{ env.vsvarsall }}" amd64
         .\QuantLib-Risks-Cpp\test-suite\quantlib-risks-test-suite --log_level=message
     - name: Install
       if: ${{ matrix.disable_aad == 'OFF' }}
@@ -204,7 +204,7 @@ jobs:
         echo set_target_properties(AdjointSwapXAD PROPERTIES MSVC_RUNTIME_LIBRARY MultiThreaded) >> CMakeLists.txt
         mkdir build
         cd build
-        call "${{ env.vsvarsall }}" amd64 -vcvars_ver=14.3
+        call "${{ env.vsvarsall }}" amd64
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install ..
         cmake --build .
         AdjointSwapXAD.exe
