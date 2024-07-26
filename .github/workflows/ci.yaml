@@ -107,6 +107,7 @@ jobs:
         echo "find_package(QuantLib-Risks REQUIRED)" >> CMakeLists.txt
         echo "add_executable(AdjointSwapXAD AdjointSwapXAD.cpp)" >> CMakeLists.txt
         echo "target_link_libraries(AdjointSwapXAD PRIVATE QuantLib::QuantLib)" >> CMakeLists.txt
+        echo "target_compile_features(AdjointSwapXAD PUBLIC cxx_std_17)" >> CMakeLists.txt
         mkdir build
         cd build
         cmake -G Ninja -DBOOST_ROOT=/usr \
@@ -202,6 +203,7 @@ jobs:
         echo add_executable(AdjointSwapXAD AdjointSwapXAD.cpp) >> CMakeLists.txt
         echo target_link_libraries(AdjointSwapXAD PRIVATE QuantLib::QuantLib) >> CMakeLists.txt
         echo set_target_properties(AdjointSwapXAD PROPERTIES MSVC_RUNTIME_LIBRARY MultiThreaded) >> CMakeLists.txt
+        echo target_compile_features(AdjointSwapXAD PUBLIC cxx_std_17) >> CMakeLists.txt
         mkdir build
         cd build
         call "${{ env.vsvarsall }}" amd64
@@ -285,6 +287,7 @@ jobs:
         echo "find_package(QuantLib-Risks REQUIRED)" >> CMakeLists.txt
         echo "add_executable(AdjointSwapXAD AdjointSwapXAD.cpp)" >> CMakeLists.txt
         echo "target_link_libraries(AdjointSwapXAD PRIVATE QuantLib::QuantLib)" >> CMakeLists.txt
+        echo "target_compile_features(AdjointSwapXAD PUBLIC cxx_std_17)" >> CMakeLists.txt
         mkdir build
         cd build
         cmake -G Ninja -DBOOST_ROOT=/usr \
