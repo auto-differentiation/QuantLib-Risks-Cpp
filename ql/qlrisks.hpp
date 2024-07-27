@@ -237,8 +237,8 @@ namespace boost {
             return boost::math::lltrunc(xad::value(v));
         }
 
-        inline long_long_type lltrunk(const xad::AReal<double>& v) {
-            return boost::math::lltrunk(xad::value(v));
+        inline long_long_type lltrunc(const xad::AReal<double>& v) {
+            return boost::math::lltrunc(xad::value(v));
         }
 
         template <class Policy>
