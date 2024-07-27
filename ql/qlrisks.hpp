@@ -237,6 +237,15 @@ namespace boost {
             return boost::math::lltrunc(xad::value(v));
         }
 
+        inline long_long_type lltrunc(const xad::AReal<double>& v) {
+            return boost::math::lltrunc(xad::value(v));
+        }
+
+        template <class Policy>
+        inline long_long_type llround(const xad::AReal<double>& v, const Policy& p) {
+            return boost::math::llround(xad::value(v), p);
+        }
+
         template <class Op, class Expr1, class Expr2>
         inline int itrunc(const xad::BinaryExpr<double, Op, Expr1, Expr2>& v) {
             return itrunc(xad::value(v), policies::policy<>());
