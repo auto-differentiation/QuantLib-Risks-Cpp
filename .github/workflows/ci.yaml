@@ -12,7 +12,7 @@ on:
       ql_repo:
         description: Quantlib repository in <owner>/<repo> format
         required: true
-        default: lballabio/QuantLib
+        default: raneamri/QuantLib
       ql_branch:
         description: Branch or tag for QuantLib repository
         required: true
@@ -28,7 +28,7 @@ on:
   schedule:
     - cron: '02 5 * * *'  # 5:02 every day
 env:
-  ql_repo: ${{ github.event.inputs.ql_repo || 'lballabio/QuantLib' }}
+  ql_repo: ${{ github.event.inputs.ql_repo || 'raneamri/QuantLib' }}
   ql_branch: ${{ github.event.inputs.ql_branch || 'master' }}
   xad_repo: ${{ github.event.inputs.xad_repo || 'auto-differentiation/xad' }}
   xad_branch: ${{ github.event.inputs.xad_branch || 'main' }}
