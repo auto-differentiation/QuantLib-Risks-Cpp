@@ -39,6 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
+        cxx: ["c++17", "c++20"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -56,8 +57,15 @@ jobs:
         path: QuantLib-Risks-Cpp
     - name: Setup
       run: |
-        sudo apt update
-        sudo apt install -y libboost-dev ccache ninja-build
+        boost_version="1.85.0"
+        boost_dir="boost_1_85_0"
+        wget https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/${boost_dir}.tar.gz \
+        && tar xfz ${boost_dir}.tar.gz \
+        && rm ${boost_dir}.tar.gz \
+        && cd ${boost_dir} \
+        && ./bootstrap.sh \
+        && ./b2 --without-python --prefix=/usr -j 4 link=shared runtime-link=shared install \
+        && cd .. && rm -rf ${boost_dir} && ldconfig
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.12
       with:
@@ -70,6 +78,7 @@ jobs:
         mkdir build
         cd build
         cmake -G Ninja -DBOOST_ROOT=/usr \
+          -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} \
           -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -125,6 +134,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
+        cxx: ["c++17", "c++20"]
     runs-on: windows-2022
     env:
       vsvarsall: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
@@ -169,7 +179,7 @@ jobs:
       run: |
         cd QuantLib\build
         call "${{ env.vsvarsall }}" amd64
-        cmake --build .
+        cmake --build . -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} \
     - name: Test QuantLib
       shell: cmd
       run: |
@@ -217,6 +227,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
+        cxx: ["c++17", "c++20"]
     runs-on: macos-13
     env:
       CXXFLAGS: -stdlib=libc++ -mmacosx-version-min=10.9
@@ -250,6 +261,7 @@ jobs:
         mkdir build
         cd build
         cmake -G Ninja -DBOOST_ROOT=/usr \
+        -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} \
           -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
