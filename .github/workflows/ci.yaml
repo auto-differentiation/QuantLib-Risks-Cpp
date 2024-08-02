@@ -59,6 +59,12 @@ jobs:
       run: |
         boost_version="1.85.0"
         boost_dir="boost_1_85_0"
+
+        apt-get update \
+        && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*
+
         wget https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/${boost_dir}.tar.gz \
         && tar xfz ${boost_dir}.tar.gz \
         && rm ${boost_dir}.tar.gz \
@@ -327,8 +333,21 @@ jobs:
         path: QuantLib-Risks-Cpp
     - name: Setup
       run: |
-        sudo apt update
-        sudo apt install -y libboost-dev ccache ninja-build
+        boost_version="1.85.0"
+        boost_dir="boost_1_85_0"
+
+        apt-get update \
+        && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*
+
+        wget https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/${boost_dir}.tar.gz \
+        && tar xfz ${boost_dir}.tar.gz \
+        && rm ${boost_dir}.tar.gz \
+        && cd ${boost_dir} \
+        && ./bootstrap.sh \
+        && ./b2 --without-python --prefix=/usr -j 4 link=shared runtime-link=shared install \
+        && cd .. && rm -rf ${boost_dir} && ldconfig
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.12
       with:
