@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
-        cxx: ["c++17", "c++20"]
+        cxx: ["17", "20"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -134,7 +134,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
-        cxx: ["c++17", "c++20"]
+        cxx: ["17", "20"]
     runs-on: windows-2022
     env:
       vsvarsall: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
@@ -227,7 +227,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
-        cxx: ["c++17", "c++20"]
+        cxx: ["17", "20"]
     runs-on: macos-13
     env:
       CXXFLAGS: -stdlib=libc++ -mmacosx-version-min=10.9
