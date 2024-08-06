@@ -179,14 +179,14 @@ jobs:
         mkdir build
         cd build
         call "${{ env.vsvarsall }}" amd64
-        cmake .. -G Ninja -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
-        -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} \
-        -DCMAKE_CXX_COMPILER_LAUNCHER=sccache \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" \
-        -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks \
-        -DQL_NULL_AS_FUNCTIONS=ON \
-        -DXAD_STATIC_MSVC_RUNTIME=ON \
+        cmake .. -G Ninja -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} ^
+        -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} ^
+        -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ^
+        -DCMAKE_BUILD_TYPE=Release ^
+        -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" ^
+        -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks ^
+        -DQL_NULL_AS_FUNCTIONS=ON ^
+        -DXAD_STATIC_MSVC_RUNTIME=ON ^
         -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
     - name: Build
       shell: cmd
