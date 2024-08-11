@@ -41,7 +41,7 @@ jobs:
         disable_aad: ["ON", "OFF"]
         cxx: ["17", "20"]
         boost_version: ["1.85.0"]
-        boost_dir: ["1_85_0"]
+        boost_dir: ["boost_1_85_0"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
