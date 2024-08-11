@@ -40,6 +40,8 @@ jobs:
       matrix:
         disable_aad: ["ON", "OFF"]
         cxx: ["17", "20"]
+        boost_version: ["1.85.0"]
+        boost_dir: ["1_85_0"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -60,18 +62,18 @@ jobs:
         boost_version="1.85.0"
         boost_dir="boost_1_85_0"
 
-        apt-get update \
-        && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*
+        sudo apt-get update \
+        && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
+        && sudo apt-get clean \
+        && sudo rm -rf /var/lib/apt/lists/*
 
-        wget https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/${boost_dir}.tar.gz \
-        && tar xfz ${boost_dir}.tar.gz \
-        && rm ${boost_dir}.tar.gz \
-        && cd ${boost_dir} \
+        wget https://boostorg.jfrog.io/artifactory/main/release/${{ matrix.boost_version }}/source/${{ matrix.boost_dir }}.tar.gz \
+        && tar xfz ${{ matrix.boost_dir }}.tar.gz \
+        && rm ${{ matrix.boost_dir }}.tar.gz \
+        && cd ${{ matrix.boost_dir }} \
         && ./bootstrap.sh \
-        && ./b2 --without-python --prefix=/usr -j 4 link=shared runtime-link=shared install \
-        && cd .. && rm -rf ${boost_dir} && ldconfig
+        && sudo ./b2 --without-python --prefix=/usr -j 4 link=shared runtime-link=shared install \
+        && cd .. && sudo rm -rf ${{ matrix.boost_dir }} && sudo ldconfig
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.12
       with:
