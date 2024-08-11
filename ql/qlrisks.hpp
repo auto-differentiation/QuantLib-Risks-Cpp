@@ -491,8 +491,8 @@ namespace std {
 
     // this is needed to avoid std::random to revert to a binary / constexpr
     // implementation for Real in the random generator
-    //template <>
-    //struct _Has_static_min_max<std::mt19937, void> : false_type {};
+    template <>
+    struct _Has_static_min_max<std::mt19937, void> : false_type {};
 }
 
 #endif
