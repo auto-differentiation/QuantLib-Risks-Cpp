@@ -335,6 +335,10 @@ jobs:
     - uses: actions/checkout@v4
       with:
         path: QuantLib-Risks-Cpp
+    - name: Setup
+      run: |
+        sudo apt-get update \
+        && sudo apt install -y ccache ninja-build \
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.12
       with:
