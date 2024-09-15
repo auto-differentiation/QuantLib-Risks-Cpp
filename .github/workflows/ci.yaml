@@ -65,8 +65,11 @@ jobs:
         max-size: 650M
     - name: Setup
       run: |
-        sudo apt-get update
-        apt-get install -y ninja-build
+        sudo apt-get update \
+        && sudo apt install -y libboost-dev ccache ninja-build \
+        && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
+        && sudo apt-get clean \
+        && sudo rm -rf /var/lib/apt/lists/*
     - name: Configure
       run: |
         rm -rf ${{ github.workspace }}/install
