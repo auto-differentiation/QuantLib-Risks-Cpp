@@ -66,10 +66,7 @@ jobs:
     - name: Setup
       run: |
         apt-get update \
-        && apt install -y libboost-dev ccache ninja-build \
-        && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*
+        && apt install -y libboost-dev ccache ninja-build
     - name: Configure
       run: |
         rm -rf ${{ github.workspace }}/install
@@ -81,10 +78,10 @@ jobs:
           -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          -DQL_EXTERNAL_SUBDIRECTORIES="/home/runner/work/QuantLib-Risks-Cpp/xad;/home/runner/work/QuantLib-Risks-Cpp" \
+          -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" \
           -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks \
           -DQL_NULL_AS_FUNCTIONS=ON \
-          -DCMAKE_INSTALL_PREFIX=/home/runner/work/QuantLib-Risks-Cpp/install \
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
           ..
     - name: Compile
       run: |
