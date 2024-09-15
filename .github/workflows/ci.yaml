@@ -353,7 +353,7 @@ jobs:
         -DQL_USE_STD_CLASSES=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DQL_EXTERNAL_SUBDIRECTORIES="$(pwd)/../../xad;$(pwd)/../../QuantLib-Risks-Cpp \
+        -DQL_EXTERNAL_SUBDIRECTORIES="$(pwd)/../../xad;$(pwd)/../../QuantLib-Risks-Cpp" \
         -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks \
         -DQL_NULL_AS_FUNCTIONS=ON \
         ..
