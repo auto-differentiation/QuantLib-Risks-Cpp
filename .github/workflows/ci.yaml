@@ -320,6 +320,7 @@ jobs:
         boost_version: ["1.85.0"]
         boost_dir: ["boost_1_85_0"]
     runs-on: ubuntu-latest
+    container: ghcr.io/lballabio/quantlib-devenv:rolling
     steps:
     - uses: actions/checkout@v4
       with:
@@ -334,21 +335,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         path: QuantLib-Risks-Cpp
-    - name: Setup
-      run: |
-        sudo apt-get update \
-        && sudo apt install -y libboost-dev ccache ninja-build \
-        && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
-        && sudo apt-get clean \
-        && sudo rm -rf /var/lib/apt/lists/*
-
-        wget https://boostorg.jfrog.io/artifactory/main/release/${{ matrix.boost_version }}/source/${{ matrix.boost_dir }}.tar.gz \
-        && tar xfz ${{ matrix.boost_dir }}.tar.gz \
-        && rm ${{ matrix.boost_dir }}.tar.gz \
-        && cd ${{ matrix.boost_dir }} \
-        && ./bootstrap.sh \
-        && sudo ./b2 --without-python --prefix=/usr -j 4 link=shared runtime-link=shared install \
-        && cd .. && sudo rm -rf ${{ matrix.boost_dir }} && sudo ldconfig
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2.12
       with:
