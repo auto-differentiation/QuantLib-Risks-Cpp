@@ -66,6 +66,7 @@ jobs:
     - name: Configure
       run: |
         rm -rf ${{ github.workspace }}/install
+        apt-get install -y ninja-build
         cd QuantLib
         mkdir build
         cd build
