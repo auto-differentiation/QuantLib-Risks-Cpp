@@ -70,10 +70,6 @@ jobs:
         && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential wget libbz2-dev autoconf automake libtool ccache cmake clang git \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*
-    - name: GitHub WS Tmp
-        # https://github.com/actions/runner/issues/2058
-      run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE" >> $GITHUB_ENV
     - name: Configure
       run: |
         rm -rf ${{ github.workspace }}/install
@@ -85,10 +81,10 @@ jobs:
           -DQLRISKS_DISABLE_AAD=${{ matrix.disable_aad }} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLib-Risks-Cpp" \
+          -DQL_EXTERNAL_SUBDIRECTORIES="/home/runner/work/QuantLib-Risks-Cpp/xad;/home/runner/work/QuantLib-Risks-Cpp/QuantLib-Risks-Cpp" \
           -DQL_EXTRA_LINK_LIBRARIES=QuantLib-Risks \
           -DQL_NULL_AS_FUNCTIONS=ON \
-          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
+          -DCMAKE_INSTALL_PREFIX=/home/runner/work/QuantLib-Risks-Cpp/install \
           ..
     - name: Compile
       run: |
