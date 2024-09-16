@@ -115,7 +115,7 @@ jobs:
         cd build
         cmake -G Ninja -DBOOST_ROOT=/usr \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install \
+          -DCMAKE_PREFIX_PATH=$(pwd)/../../install \
           ..
         cmake --build .
         ./AdjointSwapXAD
