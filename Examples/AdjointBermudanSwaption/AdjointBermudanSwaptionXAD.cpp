@@ -52,6 +52,7 @@ TODO: Use the implicit function theorem for calibration with AAD.
 #include <ql/utilities/dataformatters.hpp>
 #include <iomanip>
 #include <iostream>
+#include <chrono>
 
 using namespace QuantLib;
 
@@ -181,6 +182,7 @@ Real priceWithSensi(const std::vector<Integer>& swapLengths,
                     Size numCols,
                     Real flatRate,
                     std::vector<Real>& gradient) {
+    tape.clearAll();
     // register the independent inputs
     auto swaptionVols_t = swaptionVols;
     tape.registerInputs(swaptionVols_t);
@@ -194,6 +196,8 @@ Real priceWithSensi(const std::vector<Integer>& swapLengths,
     tape.computeAdjoints();
 
     // store adjoints in gradient vector
+    gradient.clear();
+    gradient.reserve(swaptionVols_t.size());
     for (auto& vol : swaptionVols_t) {
         gradient.push_back(derivative(vol));
     }
@@ -217,9 +221,11 @@ void printResults(Real value, const std::vector<Real>& gradient) {
     std::cout << std::endl;
 }
 
-int main(int, char*[]) {
+int main(int argc, char* argv[]) {
 
     try {
+
+        const int N = argc < 2 ? 1 : std::atol(argv[1]);
 
         std::cout << std::endl;
 
@@ -243,9 +249,22 @@ int main(int, char*[]) {
 #else
         std::cout << "Pricing Bermudan swaption with sensitivities...\n";
         std::vector<Real> gradient;
-        Real price =
-            priceWithSensi(swapLengths, swaptionVols, numRows, numCols, flatRate, gradient);
+        
+        Real price = 0.0;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < N; ++i) {
+            price =
+                priceWithSensi(swapLengths, swaptionVols, numRows, numCols, flatRate, gradient);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto time =
+            static_cast<double>(
+                std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()) *
+            1e-3 / N;
         printResults(price, gradient);
+
+        std::cout << std::fixed << std::setprecision(9);
+        std::cout << "For " << N << " repetitions, it took on average " << time << " ms\n";
 #endif
 
         return 0;
