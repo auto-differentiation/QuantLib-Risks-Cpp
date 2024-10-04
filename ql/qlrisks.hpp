@@ -478,14 +478,14 @@ namespace boost {
 // MSVC specialisations / fixes
 #ifdef _MSC_VER
 
-#include <random>
-
 // required for random - as it calls ::sqrt on arguments
 using xad::sqrt;
 using xad::pow;
 using xad::exp;
 using xad::log;
 using xad::tan;
+
+#include <random>
 
 namespace std {
 
