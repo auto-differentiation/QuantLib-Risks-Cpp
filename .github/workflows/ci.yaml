@@ -128,7 +128,7 @@ jobs:
       fail-fast: false
       matrix:
         disable_aad: ["ON", "OFF"]
-        cxx: ["17"]
+        cxx: ["17", "20"]
     runs-on: windows-2022
     env:
       vsvarsall: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
