@@ -25,6 +25,8 @@ on:
         description: Branch or tag for XAD repository
         required: true
         default: main
+  repository_dispatch:
+    types: [xad-ci-trigger]
   schedule:
     - cron: '02 5 * * *'  # 5:02 every day
 env:
