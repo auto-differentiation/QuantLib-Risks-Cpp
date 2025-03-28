@@ -80,22 +80,18 @@ namespace boost {
         // full specialisations for promoting 2 types where one of them is AReal<double>,
         // used by boost math functions a lot
         namespace tools {
-            // partial specialisation
-            template <typename T1, typename T2>
-            struct promote_args_2;
-
             template <>
-            struct promote_args_2<xad::AReal<double>, xad::AReal<double>> {
+            struct promote_args_permissive<xad::AReal<double>, xad::AReal<double>> {
                 typedef xad::AReal<double> type;
             };
 
             template <class T>
-            struct promote_args_2<xad::AReal<double>, T> {
+            struct promote_args_permissive<xad::AReal<double>, T> {
                 typedef xad::AReal<double> type;
             };
 
             template <class T>
-            struct promote_args_2<T, xad::AReal<double>> {
+            struct promote_args_permissive<T, xad::AReal<double>> {
                 typedef xad::AReal<double> type;
             };
         }
