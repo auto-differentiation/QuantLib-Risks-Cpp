@@ -96,7 +96,7 @@ namespace boost {
             };
         }
 
-        // Propagating policies for boost math involving AReal
+        // propagating policies for boost math involving AReal
         namespace policies {
             template <class Policy>
             struct evaluation<xad::AReal<double>, Policy> {
