@@ -62,7 +62,7 @@ namespace QuantLib {
     }
 }
 
-// boost specialisations
+// Boost specializations
 namespace boost {
 
     template <class Target, class Op, class Expr> 

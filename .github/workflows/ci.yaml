@@ -5,6 +5,8 @@
 # for QuantLib and XAD can be provided in this case.
 name: CI
 on: 
+  repository_dispatch:
+    types: [xad-ci-trigger]
   push:
   pull_request:
   workflow_dispatch:
