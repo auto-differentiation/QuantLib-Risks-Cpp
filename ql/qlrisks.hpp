@@ -81,22 +81,22 @@ namespace boost {
         // used by boost math functions a lot
         namespace tools {
             template <>
-            struct promote_args_2<xad::AReal<double>, xad::AReal<double>> {
+            struct promote_args_permissive<xad::AReal<double>, xad::AReal<double>> {
                 typedef xad::AReal<double> type;
             };
 
             template <class T>
-            struct promote_args_2<xad::AReal<double>, T> {
+            struct promote_args_permissive<xad::AReal<double>, T> {
                 typedef xad::AReal<double> type;
             };
 
             template <class T>
-            struct promote_args_2<T, xad::AReal<double>> {
+            struct promote_args_permissive<T, xad::AReal<double>> {
                 typedef xad::AReal<double> type;
             };
         }
 
-        // Propagating policies for boost math involving AReal
+        // propagating policies for boost math involving AReal
         namespace policies {
             template <class Policy>
             struct evaluation<xad::AReal<double>, Policy> {
