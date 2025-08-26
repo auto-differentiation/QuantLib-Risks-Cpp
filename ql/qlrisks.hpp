@@ -114,6 +114,35 @@ namespace boost {
             };
         }
 
+        // overrides for special functions that break with expression templates
+        namespace detail {
+            #if BOOST_VERSION >= 108900
+                // we needed to copy this from here and make adjustments to the return statement, to ensure that it works with expression templates:
+                // https://github.com/boostorg/math/blob/develop/include/boost/math/special_functions/beta.hpp#L1136
+                template <class Policy>
+                BOOST_MATH_GPU_ENABLED xad::AReal<double> ibeta_large_ab(xad::AReal<double> a, xad::AReal<double> b, xad::AReal<double> x, xad::AReal<double> y, bool invert, bool normalised, const Policy& pol)
+                {
+                    BOOST_MATH_STD_USING
+
+                    xad::AReal<double> x0 = a / (a + b);
+                    xad::AReal<double> y0 = b / (a + b);
+                    xad::AReal<double> nu = x0 * log(x / x0) + y0 * log(y / y0);
+                    if ((nu > 0) || (x == x0) || (y == y0))
+                        nu = 0;
+                    nu = sqrt(-2 * nu);
+
+                    if ((nu != 0) && (nu / (x - x0) < 0))
+                        nu = -nu;
+
+                    xad::AReal<double> mul = 1;
+                    if (!normalised)
+                        mul = boost::math::beta(a, b, pol);
+
+                    return mul * ((invert ? xad::AReal<double>((1 + boost::math::erf(-nu * sqrt((a + b) / 2), pol)) / 2) : xad::AReal<double>(boost::math::erfc(-nu * sqrt((a + b) / 2), pol) / 2)));
+                }
+            #endif
+        }
+
         /* specialised version of boost/math/special_functions/erfc for XAD expressions,
          *  casting the argument type to the underlying value-type and calling the boost original.
          */
