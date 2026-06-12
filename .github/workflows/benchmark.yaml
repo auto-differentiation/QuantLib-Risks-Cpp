@@ -1,0 +1,225 @@
+##############################################################################
+#
+#  QuantLibAAD Overhead Benchmark Workflow
+#
+#  Measures the overhead of building QuantLib with Real = xad::AReal<double>
+#  (AAD build, no tape recording) against a plain double build, per test,
+#  using the full QuantLib test suite and the QuantLib benchmark binary.
+#
+#  Both configurations are built and run interleaved ON THE SAME RUNNER so
+#  that the ratios are meaningful despite noisy hosted runners. Results are
+#  uploaded as artifacts (results.csv + raw logs) and summarised in the job
+#  step summary. See tools/benchmark/README.md.
+#
+#  Copyright (C) 2010-2026 Xcelerit Computing Limited
+#
+#  SPDX-License-Identifier: AGPL-3.0-or-later
+#
+##############################################################################
+
+name: Benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      ql_repo:
+        description: QuantLib repository in <owner>/<repo> format
+        required: true
+        default: lballabio/QuantLib
+      ql_branch:
+        description: Branch or tag for QuantLib repository
+        required: true
+        default: master
+      xad_repo:
+        description: XAD repository in <owner>/<repo> format
+        required: true
+        default: auto-differentiation/xad
+      xad_branch:
+        description: Branch or tag for XAD repository
+        required: true
+        default: main
+      suite_repeats:
+        description: Number of full test-suite runs per configuration
+        required: true
+        default: '2'
+      bench_repeats:
+        description: Number of quantlib-benchmark runs per configuration
+        required: true
+        default: '3'
+      bench_size:
+        description: quantlib-benchmark --size (XXS, XS, S, M, L or integer)
+        required: true
+        default: '3'
+      run_test:
+        description: Optional Boost.Test --run_test filter (for smoke runs)
+        required: false
+        default: ''
+      cxx_standard:
+        description: C++ standard to build with
+        required: true
+        default: '17'
+
+env:
+  ql_repo: ${{ github.event.inputs.ql_repo || 'lballabio/QuantLib' }}
+  ql_branch: ${{ github.event.inputs.ql_branch || 'master' }}
+  xad_repo: ${{ github.event.inputs.xad_repo || 'auto-differentiation/xad' }}
+  xad_branch: ${{ github.event.inputs.xad_branch || 'main' }}
+  suite_repeats: ${{ github.event.inputs.suite_repeats || '2' }}
+  bench_repeats: ${{ github.event.inputs.bench_repeats || '3' }}
+  bench_size: ${{ github.event.inputs.bench_size || '3' }}
+  run_test: ${{ github.event.inputs.run_test || '' }}
+  cxx_standard: ${{ github.event.inputs.cxx_standard || '17' }}
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-gcc
+            runs_on: ubuntu-latest
+            container: ghcr.io/lballabio/quantlib-devenv:rolling
+          - name: linux-clang
+            runs_on: ubuntu-latest
+            container: ghcr.io/lballabio/quantlib-devenv:rolling
+            cc: clang
+            cxx: clang++
+          - name: windows-msvc
+            runs_on: windows-2022
+          - name: macos-appleclang
+            runs_on: macos-latest
+    name: benchmark (${{ matrix.name }})
+    runs-on: ${{ matrix.runs_on }}
+    container: ${{ matrix.container }}
+    timeout-minutes: 360
+
+    env:
+      vsvarsall: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.ql_repo }}
+          ref: ${{ env.ql_branch }}
+          path: QuantLib
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.xad_repo }}
+          ref: ${{ env.xad_branch }}
+          path: xad
+
+      - uses: actions/checkout@v4
+        with:
+          path: QuantLibAAD
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2.12
+        with:
+          key: bench-${{ matrix.name }}-${{ env.cxx_standard }}
+          variant: ${{ runner.os == 'Windows' && 'sccache' || 'ccache' }}
+          max-size: 1300M
+
+      - name: Setup (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          apt-get update && apt install -y ccache ninja-build python3 ${{ matrix.cc == 'clang' && 'clang' || '' }}
+
+      - name: Setup (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install -y ninja
+          $Url = "https://downloads.sourceforge.net/project/boost/boost-binaries/1.86.0/boost_1_86_0-msvc-14.3-64.exe"
+          (New-Object System.Net.WebClient).DownloadFile($Url, "$RUNNER_TEMP\boost.exe")
+          Start-Process -Wait -FilePath "$RUNNER_TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\local\boost"
+
+      - name: Setup (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install boost ninja ccache
+
+      - name: Configure and build both configurations (Unix)
+        if: runner.os != 'Windows'
+        env:
+          CC: ${{ matrix.cc || '' }}
+          CXX: ${{ matrix.cxx || '' }}
+        run: |
+          for cfg in double aad; do
+            if [ "$cfg" = "double" ]; then disable_aad=ON; else disable_aad=OFF; fi
+            cmake -S QuantLib -B QuantLib/build-$cfg -G Ninja \
+              ${{ runner.os == 'Linux' && '-DBOOST_ROOT=/usr' || '' }} \
+              -DCMAKE_CXX_STANDARD=${{ env.cxx_standard }} \
+              -DQLAAD_DISABLE_AAD=$disable_aad \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+              -DQL_EXTERNAL_SUBDIRECTORIES="$GITHUB_WORKSPACE/xad;$GITHUB_WORKSPACE/QuantLibAAD" \
+              -DQL_EXTRA_LINK_LIBRARIES=QuantLibAAD \
+              -DQL_NULL_AS_FUNCTIONS=ON
+            cmake --build QuantLib/build-$cfg --target ql_test_suite ql_benchmark
+          done
+
+      - name: Configure and build both configurations (Windows)
+        if: runner.os == 'Windows'
+        env:
+          BOOST_ROOT: C:\local\boost
+        shell: cmd
+        run: |
+          call "${{ env.vsvarsall }}" amd64
+          cmake -S QuantLib -B QuantLib\build-double -G Ninja ^
+            -DCMAKE_CXX_STANDARD=${{ env.cxx_standard }} ^
+            -DQLAAD_DISABLE_AAD=ON ^
+            -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLibAAD" ^
+            -DQL_EXTRA_LINK_LIBRARIES=QuantLibAAD ^
+            -DQL_NULL_AS_FUNCTIONS=ON ^
+            -DXAD_STATIC_MSVC_RUNTIME=ON
+          if errorlevel 1 exit /b 1
+          cmake --build QuantLib\build-double --target ql_test_suite ql_benchmark
+          if errorlevel 1 exit /b 1
+          cmake -S QuantLib -B QuantLib\build-aad -G Ninja ^
+            -DCMAKE_CXX_STANDARD=${{ env.cxx_standard }} ^
+            -DQLAAD_DISABLE_AAD=OFF ^
+            -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DQL_EXTERNAL_SUBDIRECTORIES="${{ github.workspace }}/xad;${{ github.workspace }}/QuantLibAAD" ^
+            -DQL_EXTRA_LINK_LIBRARIES=QuantLibAAD ^
+            -DQL_NULL_AS_FUNCTIONS=ON ^
+            -DXAD_STATIC_MSVC_RUNTIME=ON
+          if errorlevel 1 exit /b 1
+          cmake --build QuantLib\build-aad --target ql_test_suite ql_benchmark
+          if errorlevel 1 exit /b 1
+
+      - name: Run benchmarks
+        shell: bash
+        run: |
+          python3 QuantLibAAD/tools/benchmark/run_benchmarks.py \
+            --build-double QuantLib/build-double \
+            --build-aad QuantLib/build-aad \
+            --suite-repeats ${{ env.suite_repeats }} \
+            --bench-repeats ${{ env.bench_repeats }} \
+            --bench-size ${{ env.bench_size }} \
+            --run-test "${{ env.run_test }}" \
+            --out results \
+            --meta platform=${{ matrix.name }} \
+                   ql_repo=${{ env.ql_repo }} \
+                   ql_sha=$(git -C QuantLib rev-parse HEAD) \
+                   xad_repo=${{ env.xad_repo }} \
+                   xad_sha=$(git -C xad rev-parse HEAD) \
+                   qlaad_sha=$(git -C QuantLibAAD rev-parse HEAD)
+
+      - name: Aggregate results
+        shell: bash
+        run: |
+          python3 QuantLibAAD/tools/benchmark/aggregate.py results \
+            --csv results/results.csv \
+            --summary "$GITHUB_STEP_SUMMARY" \
+            --top-n 25 --min-time 0.05
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-${{ matrix.name }}
+          path: results/
+          retention-days: 90
