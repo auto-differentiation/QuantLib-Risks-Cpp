@@ -223,3 +223,36 @@ jobs:
           name: benchmark-${{ matrix.name }}
           path: results/
           retention-days: 90
+
+  ##############################################################################
+  # Consolidated report: one summary page with the per-platform overhead
+  # tables of every matrix leg, plus a combined report.md artifact.
+  ##############################################################################
+  report:
+    needs: benchmark
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-*
+          path: all-results
+
+      - name: Build combined report
+        shell: bash
+        run: |
+          for d in all-results/benchmark-*; do
+            [ -d "$d" ] || continue
+            python3 tools/benchmark/aggregate.py "$d" \
+              --csv "$d/results.csv" --summary report.md --top-n 8 --min-time 0.05
+          done
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload combined report
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: report.md
+          retention-days: 90

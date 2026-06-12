@@ -278,58 +278,82 @@ def md_row(cells):
     return "| " + " | ".join(str(c) for c in cells) + " |"
 
 
+def pct(ratio):
+    """Format a ratio as overhead percent, bold when extreme (>= 6x)."""
+    if ratio is None:
+        return "n/a"
+    text = "+%.0f%%" % ((ratio - 1) * 100)
+    return "**%s**" % text if ratio >= 6.0 else text
+
+
 def write_summary(suite_rows, bench_rows, bench_runs, metadata, manifest, path, top_n, min_time):
     lines = []
-    lines.append("## XAD type overhead: AAD build vs double build")
+    platform = metadata.get("platform", "benchmark")
+    compiler = metadata.get("compiler", "unknown compiler")
+    cpu = metadata.get("cpu", "unknown CPU")
+    lines.append("## %s — %s (%s)" % (platform, compiler, cpu))
     lines.append("")
-    if metadata:
-        lines.append("| | |")
-        lines.append("|---|---|")
-        for key in sorted(metadata):
-            lines.append(md_row([key, metadata[key]]))
-        lines.append("")
 
-    # Headline numbers
+    # Overall headline as overhead percentages
     suite_sample = sorted(ratio_sample(suite_rows))
-    gm = geomean(suite_sample)
-    lines.append("### Headline")
-    lines.append("")
-    lines.append(md_row(["metric", "double", "aad", "ratio (aad/double)"]))
-    lines.append(md_row(["---", "---", "---", "---"]))
-
+    bench_sample = sorted(ratio_sample(bench_rows))
+    parts = []
     walls = manifest.get("suite_wall_s", {})
     if walls.get("double") and walls.get("aad"):
         wd = statistics.median(walls["double"])
         wa = statistics.median(walls["aad"])
-        lines.append(md_row(["test-suite wall time", "%.1f s" % wd, "%.1f s" % wa,
-                             "%.2fx" % (wa / wd) if wd else "n/a"]))
-    throughputs = {c: [t for (_, t, _) in bench_runs[c] if t] for c in CONFIGS}
-    if throughputs["double"] and throughputs["aad"]:
-        td = statistics.median(throughputs["double"])
-        ta = statistics.median(throughputs["aad"])
-        lines.append(md_row(["benchmark throughput", "%.2f tasks/s" % td, "%.2f tasks/s" % ta,
-                             "%.2fx slower" % (td / ta) if ta else "n/a"]))
-    if gm is not None:
-        lines.append(md_row(["per-test geomean overhead (suite, n=%d)" % len(suite_sample),
-                             "-", "-", "%.2fx" % gm]))
-    bench_sample = sorted(ratio_sample(bench_rows))
+        if wd:
+            parts.append("suite wall %s" % pct(wa / wd))
+    bwalls = manifest.get("bench_wall_s", {})
+    if bwalls.get("double") and bwalls.get("aad"):
+        bd = statistics.median(bwalls["double"])
+        ba = statistics.median(bwalls["aad"])
+        if bd:
+            parts.append("benchmark wall %s" % pct(ba / bd))
+    gm = geomean(suite_sample)
     gm_bench = geomean(bench_sample)
+    geo = []
+    if gm is not None:
+        geo.append("suite %s" % pct(gm))
     if gm_bench is not None:
-        lines.append(md_row(["per-test geomean overhead (benchmark, n=%d)" % len(bench_sample),
-                             "-", "-", "%.2fx" % gm_bench]))
+        geo.append("bench %s" % pct(gm_bench))
+    if geo:
+        parts.append("per-test geomean: " + ", ".join(geo))
+    if parts:
+        lines.append("**Overall: " + " · ".join(parts) + "**")
+        lines.append("")
+
+    # Combined per-test table: top suite rows then top bench rows, by overhead
+    def eligible(rows):
+        out = [r for r in rows if r["ratio"] is not None and not r["below_threshold"]]
+        out.sort(key=lambda r: r["ratio"], reverse=True)
+        return out
+
+    lines.append(md_row(["test", "double (s)", "AAD (s)", "overhead"]))
+    lines.append(md_row(["---"] * 4))
+    for r in eligible(suite_rows)[:top_n]:
+        name = r["test"].split("/")[-1]
+        lines.append(md_row(["suite: " + name,
+                             "%.3f" % r["double"]["median"],
+                             "%.3f" % r["aad"]["median"],
+                             pct(r["ratio"])]))
+    for r in eligible(bench_rows)[:top_n]:
+        lines.append(md_row(["bench: " + r["test"],
+                             "%.2f" % r["double"]["median"],
+                             "%.2f" % r["aad"]["median"],
+                             pct(r["ratio"])]))
     lines.append("")
 
-    # Distribution
+    # Distribution of suite overhead
     if suite_sample:
-        lines.append("### Suite overhead-ratio distribution")
-        lines.append("")
-        lines.append(md_row(["p10", "p25", "median", "p75", "p90"]))
-        lines.append(md_row(["---"] * 5))
-        lines.append(md_row(["%.2fx" % percentile(suite_sample, p)
+        lines.append(md_row(["suite overhead", "p10", "p25", "median", "p75", "p90"]))
+        lines.append(md_row(["---"] * 6))
+        lines.append(md_row(["distribution"] +
+                            [pct(percentile(suite_sample, p))
                              for p in (0.10, 0.25, 0.50, 0.75, 0.90)]))
         lines.append("")
 
-    # Counts
+    # Counts and full metadata, collapsed
     n_both = sum(1 for r in suite_rows if r["double"] and r["aad"])
     n_double_only = sum(1 for r in suite_rows if r["double"] and not r["aad"])
     n_aad_only = sum(1 for r in suite_rows if r["aad"] and not r["double"])
@@ -337,29 +361,22 @@ def write_summary(suite_rows, bench_rows, bench_runs, metadata, manifest, path, 
                    if (r["double"] and r["double"]["status"] == "failed")
                    or (r["aad"] and r["aad"]["status"] == "failed"))
     n_below = sum(1 for r in suite_rows if r["below_threshold"])
-    lines.append("Suite tests: %d in both configs, %d double-only, %d aad-only, "
-                 "%d failed, %d below %.3gs threshold (excluded from geomean)."
-                 % (n_both, n_double_only, n_aad_only, n_failed, n_below, min_time))
+    lines.append("<details><summary>Details: %d suite tests in both configs, "
+                 "%d failed, %d below %.3gs threshold; full metadata</summary>"
+                 % (n_both, n_failed, n_below, min_time))
     lines.append("")
-
-    # Top-N tables
-    def table(rows, title, count, reverse):
-        eligible = [r for r in rows if r["ratio"] is not None and not r["below_threshold"]]
-        eligible.sort(key=lambda r: r["ratio"], reverse=reverse)
-        out = ["### " + title, "",
-               md_row(["test", "double median (s)", "aad median (s)", "ratio"]),
-               md_row(["---"] * 4)]
-        for r in eligible[:count]:
-            out.append(md_row([r["test"],
-                               "%.4f" % r["double"]["median"],
-                               "%.4f" % r["aad"]["median"],
-                               "%.2fx" % r["ratio"]]))
-        out.append("")
-        return out
-
-    lines += table(suite_rows, "Highest overhead (suite, top %d)" % top_n, top_n, True)
-    lines += table(suite_rows, "Lowest overhead (suite, top 10)", 10, False)
-    lines += table(bench_rows, "QuantLib benchmark per-test results", len(bench_rows), True)
+    lines.append("Suite tests: %d in both configs, %d double-only, %d aad-only, "
+                 "%d failed, %d below threshold (excluded from geomean). "
+                 "Full per-test data in the results.csv artifact."
+                 % (n_both, n_double_only, n_aad_only, n_failed, n_below))
+    lines.append("")
+    lines.append("| | |")
+    lines.append("|---|---|")
+    for key in sorted(metadata):
+        lines.append(md_row([key, metadata[key]]))
+    lines.append("")
+    lines.append("</details>")
+    lines.append("")
 
     text = "\n".join(lines) + "\n"
     if len(text.encode("utf-8")) > 950_000:  # stay under GitHub's 1 MiB limit
